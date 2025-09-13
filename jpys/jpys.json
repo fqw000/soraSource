@@ -1,0 +1,18 @@
+{
+    "sourceName": "JPYS",
+    "iconUrl": "https://obs.yinruifei.com/upload/site_logo/20250210-1/4677c9e608f76cea1053ce6cf4dec973.png",
+    "author": {
+        "name": "fqw000",
+        "icon": "https://wangqifei.eu.org/images/favicon.png"
+    },
+    "version": "1.0.0",
+    "language": "Chinese",
+    "streamType": "HLS",
+    "quality": "1080p",
+    "baseUrl": "https://www.hnytxj.com/",
+    "searchBaseUrl": "https://www.hnytxj.com/vod/search/%s",
+    "scriptUrl": "https://raw.githubusercontent.com/fqw000/soraSource/refs/heads/main/jpys/jpys.js",
+    "asyncJS": true,
+    "softsub": true,
+    "type": "movies/shows"
+}
