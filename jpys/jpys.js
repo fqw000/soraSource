@@ -9,7 +9,7 @@ async function searchResults(keyword) {
     const searchUrl = `https://www.hnytxj.com/vod/search/${encodeURIComponent(keyword)}`;
     try {
         console.log("🔍 开始搜索硬盘，目标URL:", searchUrl);
-        const response = await fetchv2(searchUrl, header);
+        const response = await fetch(searchUrl, header);
         console.log("✅ 页面请求成功，状态码:", response.status);
         const html = await response.text();
         console.log("📄 获取到HTML内容，长度:", html.length, "字符");
@@ -41,7 +41,7 @@ async function searchResults(keyword) {
             });
         }
 
-        console.log(results);
+        console.table(results);
         return JSON.stringify(results);
     } catch (err) {
         console.error("Search error:", err);
@@ -61,7 +61,7 @@ async function extractDetails(url) {
         // 'Referer': searchUrl  // ✅ 使用搜索页URL
     };
     console.log("🔍 开始提取详情，目标URL:", url);
-    const response = await fetchv2(url, header);
+    const response = await fetch(url, header);
     console.log("✅ 页面请求成功，状态码:", response.status);
     const html = await response.text();
     console.log("📄 获取到HTML内容，长度:", html.length, "字符");
@@ -92,14 +92,14 @@ async function extractDetails(url) {
 }
 
 async function extractEpisodes(url) {
-    const header = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-    'Accept-Language': 'zh-CN,zh;q=0.9',
-    // 'Referer': searchUrl  // ✅ 使用搜索页URL
-    };
+
     console.log("🔍 开始提取剧集，目标URL:", url);
-    const response = await fetchv2(url, header);
+
+    const SCRAPINGBEE_API_KEY = 'DCRBF5EH2699UPEQUXDGL0YYE57TNFGT411LY957EX7JUROJF4JWQ7XTWEJ37JKDQ8C5OKGKGKHZ40G7';
+
+    const api_url = `https://app.scrapingbee.com/api/v1/?api_key=${SCRAPINGBEE_API_KEY}&url=${encodeURIComponent(url)}&render_js=true&wait_for=.listitem`;
+
+    const response = await fetch(api_url);
     console.log("✅ 页面请求成功，状态码:", response.status);
     const html = await response.text();
     console.log("📄 获取到HTML内容，长度:", html.length, "字符");
@@ -122,7 +122,11 @@ async function extractEpisodes(url) {
     return JSON.stringify(episodes);
 }
 
-
 async function extractStreamUrl(url) {
+    console.log(`🔍 开始提取播放链接，目标URL: ${url}`);
     return url;
 }
+// searchResults("战").then(console.log);
+// extractDetails("https://www.hnytxj.com/detail/107070").then(console.log);
+ // extractEpisodes("https://www.hnytxj.com/detail/107070").then(console.log);
+// extractStreamUrl("https://www.hnytxj.com/vod/play/107070/sid/1/nid/1.html").then(console.log);
