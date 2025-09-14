@@ -9,7 +9,7 @@ async function searchResults(keyword) {
     const searchUrl = `https://www.hnytxj.com/vod/search/${encodeURIComponent(keyword)}`;
     try {
         console.log("🔍 开始搜索硬盘，目标URL:", searchUrl);
-        const response = await fetch(searchUrl, header);
+        const response = await fetchv2(searchUrl, header);
         console.log("✅ 页面请求成功，状态码:", response.status);
         const html = await response.text();
         console.log("📄 获取到HTML内容，长度:", html.length, "字符");
@@ -61,7 +61,7 @@ async function extractDetails(url) {
         // 'Referer': searchUrl  // ✅ 使用搜索页URL
     };
     console.log("🔍 开始提取详情，目标URL:", url);
-    const response = await fetch(url, header);
+    const response = await fetchv2(url, header);
     console.log("✅ 页面请求成功，状态码:", response.status);
     const html = await response.text();
     console.log("📄 获取到HTML内容，长度:", html.length, "字符");
@@ -99,7 +99,7 @@ async function extractEpisodes(url) {
 
     const api_url = `https://app.scrapingbee.com/api/v1/?api_key=${SCRAPINGBEE_API_KEY}&url=${encodeURIComponent(url)}&render_js=true&wait_for=.listitem`;
 
-    const response = await fetch(api_url);
+    const response = await fetchv2(api_url);
     console.log("✅ 页面请求成功，状态码:", response.status);
     const html = await response.text();
     console.log("📄 获取到HTML内容，长度:", html.length, "字符");
