@@ -41,7 +41,7 @@ async function searchResults(keyword) {
             });
         }
 
-        console.table(results);
+        console.log(results);
         return JSON.stringify(results);
     } catch (err) {
         console.error("Search error:", err);
@@ -122,11 +122,13 @@ async function extractEpisodes(url) {
     return JSON.stringify(episodes);
 }
 
+
+
 async function extractStreamUrl(url) {
-    console.log(`🔍 开始提取播放链接，目标URL: ${url}`);
     return url;
 }
+
 // searchResults("战").then(console.log);
 // extractDetails("https://www.hnytxj.com/detail/107070").then(console.log);
- // extractEpisodes("https://www.hnytxj.com/detail/107070").then(console.log);
+//  extractEpisodes("https://www.hnytxj.com/detail/107070").then(console.log);
 // extractStreamUrl("https://www.hnytxj.com/vod/play/107070/sid/1/nid/1.html").then(console.log);
