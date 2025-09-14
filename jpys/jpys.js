@@ -19,7 +19,8 @@ async function searchResults(keyword) {
             const href = match[1].startsWith('http') ? match[1] : `https://www.hnytxj.com${match[1]}`;
             
             // 处理图片URL
-            const image = match[2].startsWith('http') ? match[2] : `https://www.hnytxj.com${match[2]}`;
+            const image_format = match[2].replace(/?[^"]+/g, '');  // 移除查询参数
+            const image = image_format.startsWith('http') ? image_format : `https://www.hnytxj.com${image_format}`;
             
             // 提取标题 - 需要清理HTML标签
             let title = match[3] || match[4];
@@ -160,8 +161,6 @@ async function extractDetails(url) {
 // console.log("提取的详情信息:");
 // console.log(JSON.stringify(details, null, 2));
 // console.table(details);
-
-
 
 
 //  以下为extractEpisode函数的代码
