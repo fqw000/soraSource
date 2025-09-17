@@ -191,7 +191,6 @@ async function extractEpisodes(url) {
 async function extractStreamUrl(url) {
   console.log("🔍 开始提取流媒体URL:", url);
 
-  try {
     // 调用 Cloudflare Worker
     const workerUrl = `https://stream.wangqifei.eu.org/?url=${encodeURIComponent(url)}`;
     console.log("🔗 调用Worker URL:", workerUrl);
@@ -236,15 +235,6 @@ async function extractStreamUrl(url) {
       const link = "https://ppvod01.blbtgg.com/splitOut/20250911/1018314/V20250911221231832941018314/index.m3u8?auth_key=1758115403-63b575f0883e43ceb6a350cd00ca1e5f-0-337cdb245da6241ac8ca592e157afb2d";
     return link;
 
-
-  } catch (error) {
-    console.error("❌ 提取流媒体URL失败:", error.message);
-    
-    // 返回一个符合格式的错误响应
-    return {
-      "streams": [],
-      "error": error.message
-    };
   }
 }
 
