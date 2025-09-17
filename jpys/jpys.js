@@ -188,55 +188,69 @@ async function extractEpisodes(url) {
 
 
 // 通过CFworkers计算sign
-async function extractStreamUrl(url) {
-  console.log("🔍 开始提取流媒体URL:", url);
+// async function extractStreamUrl(url) {
+//   console.log("🔍 开始提取流媒体URL:", url);
 
-    // 调用 Cloudflare Worker
-    const workerUrl = `https://stream.wangqifei.eu.org/?url=${encodeURIComponent(url)}`;
-    console.log("🔗 调用Worker URL:", workerUrl);
+//   try {
+//     // 调用 Cloudflare Worker
+//     const workerUrl = `https://stream.wangqifei.eu.org/?url=${encodeURIComponent(url)}`;
+//     console.log("🔗 调用Worker URL:", workerUrl);
 
-    const response = await fetch(workerUrl);
+//     const response = await fetch(workerUrl);
     
-    // 如果响应不是 JSON 或者请求失败，直接抛出错误
-    if (!response.ok || !response.headers.get('Content-Type').includes('application/json')) {
-      const errorText = await response.text();
-      throw new Error(`Worker request failed: ${response.status} - ${errorText}`);
-    }
+//     // 如果响应不是 JSON 或者请求失败，直接抛出错误
+//     if (!response.ok || !response.headers.get('Content-Type').includes('application/json')) {
+//       const errorText = await response.text();
+//       throw new Error(`Worker request failed: ${response.status} - ${errorText}`);
+//     }
 
-    const jsonData = await response.json();
-    console.log("📄 Worker JSON 响应内容:", JSON.stringify(jsonData));
+//     const jsonData = await response.json();
+//     console.log("📄 Worker JSON 响应内容:", JSON.stringify(jsonData));
 
-    // 检查响应数据结构是否有效
-    if (!jsonData || !jsonData.data || !jsonData.data.list) {
-      throw new Error('Invalid JSON response format from Worker.');
-    }
+//     // 检查响应数据结构是否有效
+//     if (!jsonData || !jsonData.data || !jsonData.data.list) {
+//       throw new Error('Invalid JSON response format from Worker.');
+//     }
 
-    // 将 API 响应中的流媒体列表转换为目标格式
-    const streams = jsonData.data.list.map((item) => {
-      return {
-        // 使用分辨率作为服务器标题，或者使用默认值
-        "title": item.resolutionName || "Unknown Resolution",
-        "streamUrl": item.url,
-        "headers": {} // 目标源不需要自定义 headers
-      };
-    });
+//     // 将 API 响应中的流媒体列表转换为目标格式
+//     const streams = jsonData.data.list.map((item) => {
+//       return {
+//         // 使用分辨率作为服务器标题，或者使用默认值
+//         "title": item.resolutionName || "Unknown Resolution",
+//         "streamUrl": item.url,
+//         "headers": {} // 目标源不需要自定义 headers
+//       };
+//     });
 
-    const result = {
-      "streams": streams
-    };
+//     const result = {
+//       "streams": streams
+//     };
 
-    console.log("✅ 成功生成流媒体列表:", streams);
-    // return result;
+//     console.log("✅ 成功生成流媒体列表:", streams);
+//     // return result;
 
-      // 返回第一个流链接
-    // const link = jsonData.data.list[0].url;
-    // console.log("🔗 提取的流链接:", link);
-    // 实测使用：
-      const link = "https://ppvod01.blbtgg.com/splitOut/20250911/1018314/V20250911221231832941018314/index.m3u8?auth_key=1758115403-63b575f0883e43ceb6a350cd00ca1e5f-0-337cdb245da6241ac8ca592e157afb2d";
-    return link;
+//       // 返回第一个流链接
+//     const link = jsonData.data.list[0].url;
+//     console.log("🔗 提取的流链接:", link);
+//     return link;
 
-  }
+
+//   } catch (error) {
+//     console.error("❌ 提取流媒体URL失败:", error.message);
+    
+//     // 返回一个符合格式的错误响应
+//     return {
+//       "streams": [],
+//       "error": error.message
+//     };
+//   }
+// }
+
+async function extractStreamUrl(url) {
+    const streamUrl = "https://ppvod01.blbtgg.com/splitOut/20250911/1018314/V20250911221231832941018314/index.m3u8?auth_key=1758115403-63b575f0883e43ceb6a350cd00ca1e5f-0-337cdb245da6241ac8ca592e157afb2d";
+    reutrn streamUrl;
 }
+
 
 // 使用示例 
 // searchResults("战").then(console.log);
