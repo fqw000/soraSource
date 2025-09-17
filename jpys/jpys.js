@@ -247,10 +247,10 @@ async function extractEpisodes(url) {
 // }
 
 async function extractStreamUrl(url) {
+    // 这里应该添加从输入url提取或生成streamUrl的逻辑
     const streamUrl = "https://ppvod01.blbtgg.com/splitOut/20250911/1018314/V20250911221231832941018314/index.m3u8?auth_key=1758115403-63b575f0883e43ceb6a350cd00ca1e5f-0-337cdb245da6241ac8ca592e157afb2d";
-    reutrn streamUrl;
+    return streamUrl;
 }
-
 
 // 使用示例 
 // searchResults("战").then(console.log);
