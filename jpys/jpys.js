@@ -151,7 +151,7 @@ async function extractEpisodes(url) {
 //     't': t.toString()
 //   };
 
-//   const apiUrl = 'https://m.sunnafh.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
+//   const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
 //   console.log("🔗 请求API URL:", apiUrl);
 
 //   let json_data;
@@ -168,6 +168,18 @@ async function extractEpisodes(url) {
 //   if (!json_data || !json_data.data || !json_data.data.list || json_data.data.list.length === 0) {
 //     return 'Error: Invalid API response or no stream URL found.';
 //   }
+
+//   const streams = json_data.data.list.map((item) => {
+//     return {
+//       // 使用分辨率作为服务器标题，或者使用默认值
+//       "title": item.resolutionName || "Unknown Resolution",
+//       "streamUrl": item.url,
+//       "headers": {} // 目标源不需要自定义 headers
+//     };
+//   });
+//   console.log("🎬 可用的流选项:", streams);
+
+//   // 返回第一个流链接
 
 //   const link = json_data.data.list[0].url;
 //   console.log("🔗 提取的流链接:", link);
@@ -214,8 +226,14 @@ async function extractStreamUrl(url) {
       "streams": streams
     };
 
-    console.log("✅ 成功生成流媒体列表:", JSON.stringify(result));
-    return result;
+    console.log("✅ 成功生成流媒体列表:", streams);
+    // return result;
+
+      // 返回第一个流链接
+    const link = jsonData.data.list[0].url;
+    console.log("🔗 提取的流链接:", link);
+    return link;
+
 
   } catch (error) {
     console.error("❌ 提取流媒体URL失败:", error.message);
