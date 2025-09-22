@@ -41,7 +41,7 @@ async function searchResults(keyword) {
             });
         }
 
-        console.table(results);
+        console.log(results);
         return JSON.stringify(results);
     } catch (err) {
         console.error("Search error:", err);
@@ -118,7 +118,7 @@ async function extractEpisodes(url) {
         });
     }
 
-    console.table(episodes);
+    console.log(episodes);
     return JSON.stringify(episodes);
 }
 
@@ -467,7 +467,7 @@ async function extractStreamUrl(url) {
                 title: item.resolutionName || 'Unknown Resolution',
                 streamUrl: item.url
             }));
-            console.table(streams);
+            console.log(streams);
             console.log('本地签名参数:', {
                 pid, nid, t, signkey, md5Hash, sign
             });
