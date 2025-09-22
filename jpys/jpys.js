@@ -1,15 +1,15 @@
 
 async function searchResults(keyword) {
     const header = {
-    'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
-    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
-    'Referer': 'https://www.hnytxj.com',
-    'Accept-Language': 'zh-CN,zh;q=0.9'
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Referer': 'https://www.hnytxj.com',
+        'Accept-Language': 'zh-CN,zh;q=0.9'
     };
     const searchUrl = `https://www.hnytxj.com/vod/search/${encodeURIComponent(keyword)}`;
     try {
         console.log("🔍 开始搜索硬盘，目标URL:", searchUrl);
-        const response = await fetchv2(searchUrl, header);
+        const response = await fetch(searchUrl, header);
         console.log("✅ 页面请求成功，状态码:", response.status);
         const html = await response.text();
         console.log("📄 获取到HTML内容，长度:", html.length, "字符");
@@ -23,17 +23,17 @@ async function searchResults(keyword) {
         while ((match = regex.exec(html)) !== null) {
             // 确保URL是完整的
             const href = match[1].startsWith('http') ? match[1] : `https://www.hnytxj.com${match[1]}`;
-            
+
             // 处理图片
             const image_format = match[2].replace(/\?.*$/, '');
             const image = image_format.startsWith('http') ? image_format : `https://www.hnytxj.com${image_format}`;
-            
+
             // 提取标题 - 需要清理HTML标签
             let title = match[3]
-            
+
             // 清理标题中的HTML标签（特别是<span style>标签）
             const title_cleaned = title.replace(/<span[^>]*>|<\/span>/g, '').trim();
-            
+
             results.push({
                 title: title_cleaned.trim(),
                 image: image.trim(),
@@ -41,7 +41,7 @@ async function searchResults(keyword) {
             });
         }
 
-        console.log(results);
+        console.table(results);
         return JSON.stringify(results);
     } catch (err) {
         console.error("Search error:", err);
@@ -61,7 +61,7 @@ async function extractDetails(url) {
         // 'Referer': searchUrl  // ✅ 使用搜索页URL
     };
     console.log("🔍 开始提取详情，目标URL:", url);
-    const response = await fetchv2(url, header);
+    const response = await fetch(url, header);
     console.log("✅ 页面请求成功，状态码:", response.status);
     const html = await response.text();
     console.log("📄 获取到HTML内容，长度:", html.length, "字符");
@@ -99,161 +99,397 @@ async function extractEpisodes(url) {
 
     const api_url = `https://app.scrapingbee.com/api/v1/?api_key=${SCRAPINGBEE_API_KEY}&url=${encodeURIComponent(url)}&render_js=true&wait_for=.listitem`;
 
-    const response = await fetchv2(api_url);
+    const response = await fetch(api_url);
     console.log("✅ 页面请求成功，状态码:", response.status);
     const html = await response.text();
     console.log("📄 获取到HTML内容，长度:", html.length, "字符");
     const episodes = [];
 
     const regex = /<div class=" listitem"><a href="(\/vod\/play\/\d+\/sid\/\d+)">(\d+)<\/a><\/div>/g;
-            
-            let match;
-            while ((match = regex.exec(html)) !== null) {
-                const href = match[1].startsWith('http') ? match[1] : `https://www.hnytxj.com${match[1]}`;
-                const episodeNumber = parseInt(match[2], 10);
-                
-                episodes.push({
-                    href: href.trim(),
-                    number: episodeNumber
-                });
-            }
 
-    console.log(episodes);
+    let match;
+    while ((match = regex.exec(html)) !== null) {
+        const href = match[1].startsWith('http') ? match[1] : `https://www.hnytxj.com${match[1]}`;
+        const episodeNumber = parseInt(match[2], 10);
+
+        episodes.push({
+            href: href.trim(),
+            number: episodeNumber
+        });
+    }
+
+    console.table(episodes);
     return JSON.stringify(episodes);
 }
 
-// sora不支持引用cryptoJS库，内部函数运行导致计算的sign和cryptoJS库不一致，该用cfworkers计算
-// async function extractStreamUrl(url) {
-//   // 使用Node.js内置的加密模块
-//   const crypto = require('crypto');
-  
-//   // 从URL中解析出 pid 和 nid
-//   const parts = url.split('/');
-//   const pid = parts[5];
-//   const nid = parts[7];
-  
-//   const t = new Date().getTime();
-  
-//   // 构建签名所需的字符串
-//   const signkey = 'clientType=1&id=' + pid + '&nid=' + nid + '&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
-//   console.log("📝 生成签名字符串:", signkey);
-  
-//   // 使用MD5和SHA1生成签名
-//   const md5Hash = crypto.createHash('md5').update(signkey).digest('hex');
-//   console.log("🔐 生成MD5哈希:", md5Hash);
-//   const sign = crypto.createHash('sha1').update(md5Hash).digest('hex');
-//   console.log("🔐 生成签名:", sign);
-  
-//   const headers = {
-//     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-//     'deviceid': '63ffad23-a598-4f96-85d7-7bf5f3e4a0a2',
-//     'sign': sign,
-//     't': t.toString()
-//   };
-
-//   const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
-//   console.log("🔗 请求API URL:", apiUrl);
-
-//   let json_data;
-//   try {
-//     const response = await fetch(apiUrl, { headers: headers });
-//     json_data = await response.json();
-//   } catch (e) {
-//     // 捕获请求或解析错误
-//     return 'Error: ' + e.message;
-//   }
-  
-//   console.log("📦 API响应数据:", JSON.stringify(json_data));
-//   // 检查数据是否有效
-//   if (!json_data || !json_data.data || !json_data.data.list || json_data.data.list.length === 0) {
-//     return 'Error: Invalid API response or no stream URL found.';
-//   }
-
-//   const streams = json_data.data.list.map((item) => {
-//     return {
-//       // 使用分辨率作为服务器标题，或者使用默认值
-//       "title": item.resolutionName || "Unknown Resolution",
-//       "streamUrl": item.url,
-//       "headers": {} // 目标源不需要自定义 headers
-//     };
-//   });
-//   console.log("🎬 可用的流选项:", streams);
-
-//   // 返回第一个流链接
-
-//   const link = json_data.data.list[0].url;
-//   console.log("🔗 提取的流链接:", link);
-//   return link;
-// }
-
-
-// 通过CFworkers计算sign
-// async function extractStreamUrl(url) {
-//   console.log("🔍 开始提取流媒体URL:", url);
-
-//   try {
-//     // 调用 Cloudflare Worker
-//     const workerUrl = `https://stream.wangqifei.eu.org/?url=${encodeURIComponent(url)}`;
-//     console.log("🔗 调用Worker URL:", workerUrl);
-
-//     const response = await fetch(workerUrl);
-    
-//     // 如果响应不是 JSON 或者请求失败，直接抛出错误
-//     if (!response.ok || !response.headers.get('Content-Type').includes('application/json')) {
-//       const errorText = await response.text();
-//       throw new Error(`Worker request failed: ${response.status} - ${errorText}`);
-//     }
-
-//     const jsonData = await response.json();
-//     console.log("📄 Worker JSON 响应内容:", JSON.stringify(jsonData));
-
-//     // 检查响应数据结构是否有效
-//     if (!jsonData || !jsonData.data || !jsonData.data.list) {
-//       throw new Error('Invalid JSON response format from Worker.');
-//     }
-
-//     // 将 API 响应中的流媒体列表转换为目标格式
-//     const streams = jsonData.data.list.map((item) => {
-//       return {
-//         // 使用分辨率作为服务器标题，或者使用默认值
-//         "title": item.resolutionName || "Unknown Resolution",
-//         "streamUrl": item.url,
-//         "headers": {} // 目标源不需要自定义 headers
-//       };
-//     });
-
-//     const result = {
-//       "streams": streams
-//     };
-
-//     console.log("✅ 成功生成流媒体列表:", streams);
-//     // return result;
-
-//       // 返回第一个流链接
-//     const link = jsonData.data.list[0].url;
-//     console.log("🔗 提取的流链接:", link);
-//     return link;
-
-
-//   } catch (error) {
-//     console.error("❌ 提取流媒体URL失败:", error.message);
-    
-//     // 返回一个符合格式的错误响应
-//     return {
-//       "streams": [],
-//       "error": error.message
-//     };
-//   }
-// }
-
 async function extractStreamUrl(url) {
-    // 这里应该添加从输入url提取或生成streamUrl的逻辑
-    const streamUrl = "https://ppvod01.blbtgg.com/splitOut/20250911/1018314/V20250911221231832941018314/index.m3u8?auth_key=1758115403-63b575f0883e43ceb6a350cd00ca1e5f-0-337cdb245da6241ac8ca592e157afb2d";
-    return streamUrl;
+    // const crypto = require('crypto');
+    // sora 不支持调用crypto模块，该用本地函数实现md5和sha1功能
+    // MD5哈希函数
+    function md5(string) {
+        function rotateLeft(lValue, iShiftBits) {
+            return (lValue << iShiftBits) | (lValue >>> (32 - iShiftBits));
+        }
+
+        function addUnsigned(lX, lY) {
+            let lX8 = (lX & 0x80000000);
+            let lY8 = (lY & 0x80000000);
+            let lX4 = (lX & 0x40000000);
+            let lY4 = (lY & 0x40000000);
+            let lResult = (lX & 0x3FFFFFFF) + (lY & 0x3FFFFFFF);
+            if (lX4 & lY4) return (lResult ^ 0x80000000 ^ lX8 ^ lY8);
+            if (lX4 | lY4) {
+                if (lResult & 0x40000000) return (lResult ^ 0xC0000000 ^ lX8 ^ lY8);
+                else return (lResult ^ 0x40000000 ^ lX8 ^ lY8);
+            } else return (lResult ^ lX8 ^ lY8);
+        }
+
+        function F(x, y, z) { return (x & y) | ((~x) & z); }
+        function G(x, y, z) { return (x & z) | (y & (~z)); }
+        function H(x, y, z) { return (x ^ y ^ z); }
+        function I(x, y, z) { return (y ^ (x | (~z))); }
+
+        function FF(a, b, c, d, x, s, ac) {
+            a = addUnsigned(a, addUnsigned(addUnsigned(F(b, c, d), x), ac));
+            return addUnsigned(rotateLeft(a, s), b);
+        }
+
+        function GG(a, b, c, d, x, s, ac) {
+            a = addUnsigned(a, addUnsigned(addUnsigned(G(b, c, d), x), ac));
+            return addUnsigned(rotateLeft(a, s), b);
+        }
+
+        function HH(a, b, c, d, x, s, ac) {
+            a = addUnsigned(a, addUnsigned(addUnsigned(H(b, c, d), x), ac));
+            return addUnsigned(rotateLeft(a, s), b);
+        }
+
+        function II(a, b, c, d, x, s, ac) {
+            a = addUnsigned(a, addUnsigned(addUnsigned(I(b, c, d), x), ac));
+            return addUnsigned(rotateLeft(a, s), b);
+        }
+
+        function convertToWordArray(string) {
+            let lWordCount;
+            let lMessageLength = string.length;
+            let lNumberOfWords_temp1 = lMessageLength + 8;
+            let lNumberOfWords_temp2 = (lNumberOfWords_temp1 - (lNumberOfWords_temp1 % 64)) / 64;
+            let lNumberOfWords = (lNumberOfWords_temp2 + 1) * 16;
+            let lWordArray = Array(lNumberOfWords - 1);
+            let lBytePosition = 0;
+            let lByteCount = 0;
+            while (lByteCount < lMessageLength) {
+                lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+                lBytePosition = (lByteCount % 4) * 8;
+                lWordArray[lWordCount] = (lWordArray[lWordCount] | (string.charCodeAt(lByteCount) << lBytePosition));
+                lByteCount++;
+            }
+            lWordCount = (lByteCount - (lByteCount % 4)) / 4;
+            lBytePosition = (lByteCount % 4) * 8;
+            lWordArray[lWordCount] = lWordArray[lWordCount] | (0x80 << lBytePosition);
+            lWordArray[lNumberOfWords - 2] = lMessageLength << 3;
+            lWordArray[lNumberOfWords - 1] = lMessageLength >>> 29;
+            return lWordArray;
+        }
+
+        function wordToHex(lValue) {
+            let WordToHexValue = "", WordToHexValue_temp = "", lByte, lCount;
+            for (lCount = 0; lCount <= 3; lCount++) {
+                lByte = (lValue >>> (lCount * 8)) & 255;
+                WordToHexValue_temp = "0" + lByte.toString(16);
+                WordToHexValue = WordToHexValue + WordToHexValue_temp.substr(WordToHexValue_temp.length - 2, 2);
+            }
+            return WordToHexValue;
+        }
+
+        let x = [];
+        let k, AA, BB, CC, DD, a, b, c, d;
+        let S11 = 7, S12 = 12, S13 = 17, S14 = 22;
+        let S21 = 5, S22 = 9, S23 = 14, S24 = 20;
+        let S31 = 4, S32 = 11, S33 = 16, S34 = 23;
+        let S41 = 6, S42 = 10, S43 = 15, S44 = 21;
+
+        string = utf8Encode(string);
+
+        x = convertToWordArray(string);
+
+        a = 0x67452301; b = 0xEFCDAB89; c = 0x98BADCFE; d = 0x10325476;
+
+        for (k = 0; k < x.length; k += 16) {
+            AA = a; BB = b; CC = c; DD = d;
+            a = FF(a, b, c, d, x[k + 0], S11, 0xD76AA478);
+            d = FF(d, a, b, c, x[k + 1], S12, 0xE8C7B756);
+            c = FF(c, d, a, b, x[k + 2], S13, 0x242070DB);
+            b = FF(b, c, d, a, x[k + 3], S14, 0xC1BDCEEE);
+            a = FF(a, b, c, d, x[k + 4], S11, 0xF57C0FAF);
+            d = FF(d, a, b, c, x[k + 5], S12, 0x4787C62A);
+            c = FF(c, d, a, b, x[k + 6], S13, 0xA8304613);
+            b = FF(b, c, d, a, x[k + 7], S14, 0xFD469501);
+            a = FF(a, b, c, d, x[k + 8], S11, 0x698098D8);
+            d = FF(d, a, b, c, x[k + 9], S12, 0x8B44F7AF);
+            c = FF(c, d, a, b, x[k + 10], S13, 0xFFFF5BB1);
+            b = FF(b, c, d, a, x[k + 11], S14, 0x895CD7BE);
+            a = FF(a, b, c, d, x[k + 12], S11, 0x6B901122);
+            d = FF(d, a, b, c, x[k + 13], S12, 0xFD987193);
+            c = FF(c, d, a, b, x[k + 14], S13, 0xA679438E);
+            b = FF(b, c, d, a, x[k + 15], S14, 0x49B40821);
+            a = GG(a, b, c, d, x[k + 1], S21, 0xF61E2562);
+            d = GG(d, a, b, c, x[k + 6], S22, 0xC040B340);
+            c = GG(c, d, a, b, x[k + 11], S23, 0x265E5A51);
+            b = GG(b, c, d, a, x[k + 0], S24, 0xE9B6C7AA);
+            a = GG(a, b, c, d, x[k + 5], S21, 0xD62F105D);
+            d = GG(d, a, b, c, x[k + 10], S22, 0x2441453);
+            c = GG(c, d, a, b, x[k + 15], S23, 0xD8A1E681);
+            b = GG(b, c, d, a, x[k + 4], S24, 0xE7D3FBC8);
+            a = GG(a, b, c, d, x[k + 9], S21, 0x21E1CDE6);
+            d = GG(d, a, b, c, x[k + 14], S22, 0xC33707D6);
+            c = GG(c, d, a, b, x[k + 3], S23, 0xF4D50D87);
+            b = GG(b, c, d, a, x[k + 8], S24, 0x455A14ED);
+            a = GG(a, b, c, d, x[k + 13], S21, 0xA9E3E905);
+            d = GG(d, a, b, c, x[k + 2], S22, 0xFCEFA3F8);
+            c = GG(c, d, a, b, x[k + 7], S23, 0x676F02D9);
+            b = GG(b, c, d, a, x[k + 12], S24, 0x8D2A4C8A);
+            a = HH(a, b, c, d, x[k + 5], S31, 0xFFFA3942);
+            d = HH(d, a, b, c, x[k + 8], S32, 0x8771F681);
+            c = HH(c, d, a, b, x[k + 11], S33, 0x6D9D6122);
+            b = HH(b, c, d, a, x[k + 14], S34, 0xFDE5380C);
+            a = HH(a, b, c, d, x[k + 1], S31, 0xA4BEEA44);
+            d = HH(d, a, b, c, x[k + 4], S32, 0x4BDECFA9);
+            c = HH(c, d, a, b, x[k + 7], S33, 0xF6BB4B60);
+            b = HH(b, c, d, a, x[k + 10], S34, 0xBEBFBC70);
+            a = HH(a, b, c, d, x[k + 13], S31, 0x289B7EC6);
+            d = HH(d, a, b, c, x[k + 0], S32, 0xEAA127FA);
+            c = HH(c, d, a, b, x[k + 3], S33, 0xD4EF3085);
+            b = HH(b, c, d, a, x[k + 6], S34, 0x4881D05);
+            a = HH(a, b, c, d, x[k + 9], S31, 0xD9D4D039);
+            d = HH(d, a, b, c, x[k + 12], S32, 0xE6DB99E5);
+            c = HH(c, d, a, b, x[k + 15], S33, 0x1FA27CF8);
+            b = HH(b, c, d, a, x[k + 2], S34, 0xC4AC5665);
+            a = II(a, b, c, d, x[k + 0], S41, 0xF4292244);
+            d = II(d, a, b, c, x[k + 7], S42, 0x432AFF97);
+            c = II(c, d, a, b, x[k + 14], S43, 0xAB9423A7);
+            b = II(b, c, d, a, x[k + 5], S44, 0xFC93A039);
+            a = II(a, b, c, d, x[k + 12], S41, 0x655B59C3);
+            d = II(d, a, b, c, x[k + 3], S42, 0x8F0CCC92);
+            c = II(c, d, a, b, x[k + 10], S43, 0xFFEFF47D);
+            b = II(b, c, d, a, x[k + 1], S44, 0x85845DD1);
+            a = II(a, b, c, d, x[k + 8], S41, 0x6FA87E4F);
+            d = II(d, a, b, c, x[k + 15], S42, 0xFE2CE6E0);
+            c = II(c, d, a, b, x[k + 6], S43, 0xA3014314);
+            b = II(b, c, d, a, x[k + 13], S44, 0x4E0811A1);
+            a = II(a, b, c, d, x[k + 4], S41, 0xF7537E82);
+            d = II(d, a, b, c, x[k + 11], S42, 0xBD3AF235);
+            c = II(c, d, a, b, x[k + 2], S43, 0x2AD7D2BB);
+            b = II(b, c, d, a, x[k + 9], S44, 0xEB86D391);
+            a = addUnsigned(a, AA);
+            b = addUnsigned(b, BB);
+            c = addUnsigned(c, CC);
+            d = addUnsigned(d, DD);
+        }
+        return (wordToHex(a) + wordToHex(b) + wordToHex(c) + wordToHex(d)).toLowerCase();
+    }
+
+    // SHA1哈希函数
+    function sha1(msg) {
+        function rotateLeft(n, s) {
+            return (n << s) | (n >>> (32 - s));
+        }
+
+        function cvtHex(val) {
+            let str = "";
+            let i;
+            let v;
+            for (i = 7; i >= 0; i--) {
+                v = (val >>> (i * 4)) & 0x0f;
+                str += v.toString(16);
+            }
+            return str;
+        }
+
+        let blockstart;
+        let i, j;
+        let W = new Array(80);
+        let H0 = 0x67452301;
+        let H1 = 0xEFCDAB89;
+        let H2 = 0x98BADCFE;
+        let H3 = 0x10325476;
+        let H4 = 0xC3D2E1F0;
+        let A, B, C, D, E;
+        let temp;
+
+        msg = utf8Encode(msg);
+
+        let msg_len = msg.length;
+        let word_array = [];
+        for (i = 0; i < msg_len - 3; i += 4) {
+            j = msg.charCodeAt(i) << 24 | msg.charCodeAt(i + 1) << 16 |
+                msg.charCodeAt(i + 2) << 8 | msg.charCodeAt(i + 3);
+            word_array.push(j);
+        }
+
+        switch (msg_len % 4) {
+            case 0:
+                i = 0x080000000;
+                break;
+            case 1:
+                i = msg.charCodeAt(msg_len - 1) << 24 | 0x0800000;
+                break;
+            case 2:
+                i = msg.charCodeAt(msg_len - 2) << 24 | msg.charCodeAt(msg_len - 1) << 16 | 0x08000;
+                break;
+            case 3:
+                i = msg.charCodeAt(msg_len - 3) << 24 | msg.charCodeAt(msg_len - 2) << 16 | msg.charCodeAt(msg_len - 1) << 8 | 0x80;
+                break;
+        }
+        word_array.push(i);
+
+        while ((word_array.length % 16) != 14) word_array.push(0);
+
+        word_array.push(msg_len >>> 29);
+        word_array.push((msg_len << 3) & 0x0ffffffff);
+
+        for (blockstart = 0; blockstart < word_array.length; blockstart += 16) {
+            for (i = 0; i < 16; i++) W[i] = word_array[blockstart + i];
+            for (i = 16; i <= 79; i++) W[i] = rotateLeft(W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16], 1);
+
+            A = H0;
+            B = H1;
+            C = H2;
+            D = H3;
+            E = H4;
+
+            for (i = 0; i <= 19; i++) {
+                temp = (rotateLeft(A, 5) + ((B & C) | (~B & D)) + E + W[i] + 0x5A827999) & 0x0ffffffff;
+                E = D;
+                D = C;
+                C = rotateLeft(B, 30);
+                B = A;
+                A = temp;
+            }
+
+            for (i = 20; i <= 39; i++) {
+                temp = (rotateLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0ffffffff;
+                E = D;
+                D = C;
+                C = rotateLeft(B, 30);
+                B = A;
+                A = temp;
+            }
+
+            for (i = 40; i <= 59; i++) {
+                temp = (rotateLeft(A, 5) + ((B & C) | (B & D) | (C & D)) + E + W[i] + 0x8F1BBCDC) & 0x0ffffffff;
+                E = D;
+                D = C;
+                C = rotateLeft(B, 30);
+                B = A;
+                A = temp;
+            }
+
+            for (i = 60; i <= 79; i++) {
+                temp = (rotateLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6) & 0x0ffffffff;
+                E = D;
+                D = C;
+                C = rotateLeft(B, 30);
+                B = A;
+                A = temp;
+            }
+
+            H0 = (H0 + A) & 0x0ffffffff;
+            H1 = (H1 + B) & 0x0ffffffff;
+            H2 = (H2 + C) & 0x0ffffffff;
+            H3 = (H3 + D) & 0x0ffffffff;
+            H4 = (H4 + E) & 0x0ffffffff;
+        }
+
+        temp = cvtHex(H0) + cvtHex(H1) + cvtHex(H2) + cvtHex(H3) + cvtHex(H4);
+        return temp.toLowerCase();
+    }
+
+    // UTF-8编码辅助函数
+    function utf8Encode(string) {
+        string = string.replace(/\r\n/g, "\n");
+        let utftext = "";
+        for (let n = 0; n < string.length; n++) {
+            let c = string.charCodeAt(n);
+            if (c < 128) {
+                utftext += String.fromCharCode(c);
+            } else if ((c > 127) && (c < 2048)) {
+                utftext += String.fromCharCode((c >> 6) | 192);
+                utftext += String.fromCharCode((c & 63) | 128);
+            } else {
+                utftext += String.fromCharCode((c >> 12) | 224);
+                utftext += String.fromCharCode(((c >> 6) & 63) | 128);
+                utftext += String.fromCharCode((c & 63) | 128);
+            }
+        }
+        return utftext;
+    }
+
+    // 以上为md5和sha1函数定义
+
+    try {
+        // 解析URL获取pid和nid
+        const parts = url.split('/');
+        const pid = parts[5];
+        const nid = parts[7];
+
+        // const t = new Date().getTime();
+        const t = Date.now();
+
+        // 生成签名
+        // const signkey = 'clientType=1&id=' + pid + '&nid=' + nid + '&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
+        // const md5Hash = crypto.createHash('md5').update(signkey).digest('hex');
+        // const sign = crypto.createHash('sha1').update(md5Hash).digest('hex');
+
+        const signkey = 'clientType=1&id=' + pid + '&nid=' + nid + '&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
+        const md5Hash = md5(signkey);  // 替换 crypto.createHash('md5').update(signkey).digest('hex')
+        const sign = sha1(md5Hash);    // 替换 crypto.createHash('sha1').update(md5Hash).digest('hex')
+
+        // console.log('MD5 Hash:', md5Hash);
+        // console.log('SHA1 Sign:', sign);
+
+
+        const headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+            'deviceid': '63ffad23-a598-4f96-85d7-7bf5f3e4a0a2',
+            'sign': sign,
+            't': t.toString()
+        };
+
+        const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
+
+        const response = await fetch(apiUrl, { headers: headers });
+        const json_data = await response.json();
+
+        // 检查数据有效性并返回第一个流的URL
+        if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
+            const streams = json_data.data.list.map(item => ({
+                title: item.resolutionName || 'Unknown Resolution',
+                streamUrl: item.url
+            }));
+            console.table(streams);
+            console.log('本地签名参数:', {
+                pid, nid, t, signkey, md5Hash, sign
+            });
+            return json_data.data.list[0].url;
+        } else {
+            throw new Error('Invalid API response or no stream URL found');
+        }
+
+    } catch (error) {
+        throw new Error('Failed to extract stream URL: ' + error.message);
+    }
 }
 
-// 使用示例 
 // searchResults("战").then(console.log);
 // extractDetails("https://www.hnytxj.com/detail/107070").then(console.log);
 //  extractEpisodes("https://www.hnytxj.com/detail/107070").then(console.log);
-// extractStreamUrl("https://hnytxj.com/vod/play/139191/sid/1231007").then(console.log);
+// extractStreamUrl("https://www.hnytxj.com/vod/play/107070/sid/554915").then(console.log);
+// 使用示例
+// extractStreamUrl("https://www.hnytxj.com/vod/play/139196/sid/1231041")
+//   .then(streamUrl => {
+//     console.log('提取的视频流URL:', streamUrl);
+//   })
+//   .catch(error => {
+//     console.error('错误:', error.message);
+//   });
