@@ -428,6 +428,7 @@ async function extractStreamUrl(url) {
     // 以上为md5和sha1函数定义
 
     try {
+        console.log('开始获取stream URL');
         // 解析URL获取pid和nid
         const parts = url.split('/');
         const pid = parts[5];
@@ -445,8 +446,8 @@ async function extractStreamUrl(url) {
         const md5Hash = md5(signkey);  // 替换 crypto.createHash('md5').update(signkey).digest('hex')
         const sign = sha1(md5Hash);    // 替换 crypto.createHash('sha1').update(md5Hash).digest('hex')
 
-        // console.log('MD5 Hash:', md5Hash);
-        // console.log('SHA1 Sign:', sign);
+        console.log('MD5 Hash:', md5Hash);
+        console.log('SHA1 Sign:', sign);
 
 
         const headers = {
@@ -457,7 +458,7 @@ async function extractStreamUrl(url) {
         };
 
         const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
-
+        console.log('apiUrl : ', apiUrl);
         const response = await fetchv2(apiUrl, { headers: headers });
         const json_data = await response.json();
 
