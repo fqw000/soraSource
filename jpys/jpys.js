@@ -487,9 +487,9 @@ async function extractStreamUrl(url) {
                 
         // 按照文档规范输出
         const result = {
-            streams: streams，
+            streams: streams,
             logs: {
-                url, apiUrl, pid, nid, t, singkey, md5Hash, sign,json_data
+                url, apiUrl, pid, nid, t, signkey, md5Hash, sign,json_data
             }    // 排查获取不到stram url的原因，实际使用时应注释掉
         };
         
