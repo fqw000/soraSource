@@ -463,16 +463,40 @@ async function extractStreamUrl(url) {
         const json_data = await response.json();
 
         // 检查数据有效性并返回第一个流的URL
+        // if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
+        //     const streams = json_data.data.list.map(item => ({
+        //         title: item.resolutionName || 'Unknown Resolution',
+        //         streamUrl: item.url
+        //     }));
+        //     console.log(streams);
+        //     console.log('本地签名参数:', {
+        //         pid, nid, t, signkey, md5Hash, sign
+        //     });
+        //     return json_data.data.list[0].url;
+        // } else {
+        //     throw new Error('Invalid API response or no stream URL found');
+        // }
+
+        // 检查数据有效性并按照规范输出
         if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
-            const streams = json_data.data.list.map(item => ({
-                title: item.resolutionName || 'Unknown Resolution',
-                streamUrl: item.url
-            }));
-            console.log(streams);
-            console.log('本地签名参数:', {
-                pid, nid, t, signkey, md5Hash, sign
-            });
-            return json_data.data.list[0].url;
+        const streams = json_data.data.list.map(item => ({
+            title: item.resolutionName || 'Unknown Resolution',
+            streamUrl: item.url,
+            headers: {}  // 根据文档要求添加空的headers对象
+        }));
+                
+        // 按照文档规范输出
+        const result = {
+            streams: streams
+        };
+        
+        console.table(streams);
+        console.log('本地签名参数:', {
+            apiUrl, pid, nid, t, signkey, md5Hash, sign
+        });
+        
+        // 返回规范化的结果
+        return result;
         } else {
             throw new Error('Invalid API response or no stream URL found');
         }
