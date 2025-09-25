@@ -446,8 +446,8 @@ async function extractStreamUrl(url) {
         const md5Hash = md5(signkey);  // 替换 crypto.createHash('md5').update(signkey).digest('hex')
         const sign = sha1(md5Hash);    // 替换 crypto.createHash('sha1').update(md5Hash).digest('hex')
 
-        console.log('MD5 Hash:', JSON.stringify(md5Hash)）;
-        console.log('SHA1 Sign:', JSON.stringify(sign)）;
+        console.log('MD5 Hash:', JSON.stringify(md5Hash));
+        console.log('SHA1 Sign:', JSON.stringify(sign));
 
 
         const headers = {
@@ -491,7 +491,7 @@ async function extractStreamUrl(url) {
         };
         
       //  console.table(streams);
-        console.log('本地签名参数:', JSON.stringify({ apiUrl, pid, nid, t, signkey, md5Hash, sign })）;
+        console.log('本地签名参数:', JSON.stringify({ apiUrl, pid, nid, t, signkey, md5Hash, sign }));
         
         // 返回规范化的结果
         return JSON.stringify(result);
