@@ -428,7 +428,7 @@ async function extractStreamUrl(url) {
     // 以上为md5和sha1函数定义
 
     try {
-        console.log('开始获取stream URL'， JSON.stringify(url);
+        console.log('开始获取stream URL', JSON.stringify(url));
         // 解析URL获取pid和nid
         const parts = url.split('/');
         const pid = parts[5];
