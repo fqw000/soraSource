@@ -488,15 +488,10 @@ async function extractStreamUrl(url) {
         // 按照文档规范输出
         const result = {
             streams: streams,
-            // logs: {
-            //     url, apiUrl, pid, nid, t, signkey, md5Hash, sign,json_data
-            // }    // 排查获取不到stram url的原因，实际使用时应注释掉
         };
         
-        console.table(streams);
-        console.log('本地签名参数:', {
-            apiUrl, pid, nid, t, signkey, md5Hash, sign
-        });
+      //  console.table(streams);
+        console.log('本地签名参数:', { apiUrl, pid, nid, t, signkey, md5Hash, sign });
         
         // 返回规范化的结果
         return JSON.stringify(result);
