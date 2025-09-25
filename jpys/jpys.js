@@ -488,9 +488,9 @@ async function extractStreamUrl(url) {
         // 按照文档规范输出
         const result = {
             streams: streams,
-            logs: {
-                url, apiUrl, pid, nid, t, signkey, md5Hash, sign,json_data
-            }    // 排查获取不到stram url的原因，实际使用时应注释掉
+            // logs: {
+            //     url, apiUrl, pid, nid, t, signkey, md5Hash, sign,json_data
+            // }    // 排查获取不到stram url的原因，实际使用时应注释掉
         };
         
         console.table(streams);
@@ -499,8 +499,8 @@ async function extractStreamUrl(url) {
         });
         
         // 返回规范化的结果
-        // return result;
         return JSON.stringify(result);
+            
         } else {
             throw new Error('Invalid API response or no stream URL found');
         }
