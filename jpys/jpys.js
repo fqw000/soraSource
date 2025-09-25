@@ -428,7 +428,7 @@ async function extractStreamUrl(url) {
     // 以上为md5和sha1函数定义
 
     try {
-        console.log('开始获取stream URL', JSON.stringify(url));
+        console.log('开始获取stream URL', JSON.stringify({url}));
         // 解析URL获取pid和nid
         const parts = url.split('/');
         const pid = parts[5];
@@ -446,8 +446,8 @@ async function extractStreamUrl(url) {
         const md5Hash = md5(signkey);  // 替换 crypto.createHash('md5').update(signkey).digest('hex')
         const sign = sha1(md5Hash);    // 替换 crypto.createHash('sha1').update(md5Hash).digest('hex')
 
-        console.log('MD5 Hash:', JSON.stringify(md5Hash));
-        console.log('SHA1 Sign:', JSON.stringify(sign));
+        console.log('MD5 Hash:', JSON.stringify({md5Hash}));
+        console.log('SHA1 Sign:', JSON.stringify({sign}));
 
 
         const headers = {
@@ -458,7 +458,7 @@ async function extractStreamUrl(url) {
         };
 
         const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
-        console.log('apiUrl : ', apiUrl);
+        // console.log('apiUrl : ', apiUrl);
         const response = await fetchv2(apiUrl, { headers: headers });
         const json_data = await response.json();
 
@@ -477,6 +477,10 @@ async function extractStreamUrl(url) {
         //     throw new Error('Invalid API response or no stream URL found');
         // }
 
+
+       //    console.table(streams);
+        console.log('本地签名参数:', JSON.stringify({ apiUrl, pid, nid, t, signkey, md5Hash, sign }));
+
         // 检查数据有效性并按照规范输出
         if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
         const streams = json_data.data.list.map(item => ({
@@ -490,8 +494,7 @@ async function extractStreamUrl(url) {
             streams: streams,
         };
         
-      //  console.table(streams);
-        console.log('本地签名参数:', JSON.stringify({ apiUrl, pid, nid, t, signkey, md5Hash, sign }));
+
         
         // 返回规范化的结果
         return JSON.stringify(result);
