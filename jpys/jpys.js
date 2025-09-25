@@ -499,7 +499,8 @@ async function extractStreamUrl(url) {
         });
         
         // 返回规范化的结果
-        return result;
+        // return result;
+        return JSON.stringify(result);
         } else {
             throw new Error('Invalid API response or no stream URL found');
         }
