@@ -457,17 +457,17 @@ async function extractStreamUrl(url) {
         const json_data = await response.json();
 		
 		// 检查响应,可以临时启用：
-			throw new Error(`API响应详情: ${JSON.stringify({
-			    // status: '成功',
-			    // code: json_data.code,
-				url: url,
-			    apiUrl: apiUrl,
-				t: t,
-				md5Hash: md5Hash,
-				signkey:signkey,
-				sign: sign,
-			    fullData: json_data // 完整数据，但可能很长
-			}, null, 2)}`);
+		//	throw new Error(`API响应详情: ${JSON.stringify({
+		//	    // status: '成功',
+		//	    // code: json_data.code,
+		//		url: url,
+		//	    apiUrl: apiUrl,
+		//		t: t,
+		//		md5Hash: md5Hash,
+		//		signkey:signkey,
+		//		sign: sign,
+		//	    fullData: json_data // 完整数据，但可能很长
+		//	}, null, 2)}`);
 		
         // 检查数据有效性并按照规范输出
         if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
