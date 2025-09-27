@@ -436,10 +436,6 @@ async function extractStreamUrl(url) {
         // const t = new Date().getTime();
         const t = Date.now();
 
-        // 生成签名
-        // const signkey = 'clientType=1&id=' + pid + '&nid=' + nid + '&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
-        // const md5Hash = crypto.createHash('md5').update(signkey).digest('hex');
-        // const sign = crypto.createHash('sha1').update(md5Hash).digest('hex');
 
         const signkey = 'clientType=1&id=' + pid + '&nid=' + nid + '&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
         const md5Hash = md5(signkey);  // 替换 crypto.createHash('md5').update(signkey).digest('hex')
@@ -457,12 +453,9 @@ async function extractStreamUrl(url) {
         };
 
         const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
-        // console.log('apiUrl : ', apiUrl);
-        const response = await fetchv2(apiUrl, { headers: headers });
+        const response = await fetchv2(apiUrl, headers);
         const json_data = await response.json();
 		
-		// throw new Error(`URL解析测试 - apiUrl:${apiUrl}, pid:${pid}, nid:${nid}, t:${t}, signkey:${signkey}, md5Hah:${md5Hash}, sign:${sign}, 完整URL:${url}`);
-
 		// 检查响应,可以临时启用：
 			throw new Error(`API响应详情: ${JSON.stringify({
 			    // status: '成功',
@@ -475,8 +468,6 @@ async function extractStreamUrl(url) {
 				sign: sign,
 			    fullData: json_data // 完整数据，但可能很长
 			}, null, 2)}`);
-
-
 		
         // 检查数据有效性并按照规范输出
         if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
@@ -489,15 +480,6 @@ async function extractStreamUrl(url) {
         // 按照文档规范输出
         const result = {
             streams: streams,
-			debug: {
-				apiUrl: apiUrl,
-				pid: pid,
-				nid: nid,
-				t: t,
-				signkey: signkey,
-				md5Hash: md5Hash,
-				sign: sign
-			}
         };
         
         返回规范化的结果
@@ -507,8 +489,7 @@ async function extractStreamUrl(url) {
             throw new Error('Invalid API response or no stream URL found');
         }
 		
-		// return "https://ppvod01.blbtgg.com/splitOut/20250802/944512/V2025080211123762732944512/index.m3u8?auth_key=1758971372-cdeb6564a9d74309a16dd31fc8749471-0-d02e9cb705f9ca6eeb050dcb5a9de812";
-		// return "{\"streams\":[{\"title\":\"蓝光\",\"streamUrl\":\"https://ppvod01.blbtgg.com/splitOut/20250802/944500/V2025080211123662696944500/index.m3u8?auth_key=1758971372-4e62ec156ef540ee97acecc320a9762c-0-62040fc1cf085a571af433a90b1ff35a\",\"headers\":{}},{\"title\":\"高清\",\"streamUrl\":\"https://ppvod01.blbtgg.com/splitOut/20250802/944505/V2025080211151061787944505/index.m3u8?auth_key=1758971372-01c6791ddc6f480995f6d51dd3483ecc-0-34cb32dabceca42c8e6207bc62556217\",\"headers\":{}},{\"title\":\"标清\",\"streamUrl\":\"https://ppvod01.blbtgg.com/splitOut/20250802/944512/V2025080211123762732944512/index.m3u8?auth_key=1758971372-cdeb6564a9d74309a16dd31fc8749471-0-d02e9cb705f9ca6eeb050dcb5a9de812\",\"headers\":{}}]}";
+	// return "{\"streams\":[{\"title\":\"蓝光\",\"streamUrl\":\"https://ppvod01.blbtgg.com/splitOut/20250802/944500/V2025080211123662696944500/index.m3u8?auth_key=1758971372-4e62ec156ef540ee97acecc320a9762c-0-62040fc1cf085a571af433a90b1ff35a\",\"headers\":{}},{\"title\":\"高清\",\"streamUrl\":\"https://ppvod01.blbtgg.com/splitOut/20250802/944505/V2025080211151061787944505/index.m3u8?auth_key=1758971372-01c6791ddc6f480995f6d51dd3483ecc-0-34cb32dabceca42c8e6207bc62556217\",\"headers\":{}},{\"title\":\"标清\",\"streamUrl\":\"https://ppvod01.blbtgg.com/splitOut/20250802/944512/V2025080211123762732944512/index.m3u8?auth_key=1758971372-cdeb6564a9d74309a16dd31fc8749471-0-d02e9cb705f9ca6eeb050dcb5a9de812\",\"headers\":{}}]}";
     } catch (error) {
         throw new Error('Failed to extract stream URL: ' + error.message);
     }
