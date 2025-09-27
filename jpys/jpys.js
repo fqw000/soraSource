@@ -479,7 +479,10 @@ async function extractStreamUrl(url) {
 
 
        //    console.table(streams);
-        console.log('本地签名参数:', JSON.stringify({ apiUrl, pid, nid, t, signkey, md5Hash, sign }));
+
+		const debugObj = { apiUrl, pid, nid, t, signkey, md5Hash, sign };
+   		console.log('本地签名参数:', JSON.stringify(debugObj));
+		
 		throw new Error(`URL解析测试 - pid:${pid}, nid:${nid}, 完整URL:${url}`);
         // 检查数据有效性并按照规范输出
         if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
