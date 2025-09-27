@@ -479,7 +479,7 @@ async function extractStreamUrl(url) {
 
        //    console.table(streams);
 		
-		throw new Error(`URL解析测试 - apiUrl:${apizUrl}, pid:${pid}, nid:${nid}, t:${t}, signkey:${signkey}, md5Hah:${md5Hash}, sign:${sign}, 完整URL:${url}`);
+		throw new Error(`URL解析测试 - apiUrl:${apiUrl}, pid:${pid}, nid:${nid}, t:${t}, signkey:${signkey}, md5Hah:${md5Hash}, sign:${sign}, 完整URL:${url}`);
         // 检查数据有效性并按照规范输出
         if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
         const streams = json_data.data.list.map(item => ({
