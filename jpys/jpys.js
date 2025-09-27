@@ -487,8 +487,8 @@ async function extractStreamUrl(url) {
 		// throw new Error(`调试信息 - result: ${JSON.stringify(result, null, 2)}`);
         
         // 返回规范化的结果
-        return result;
-		// retrun JSON.stringify(result);
+        // return result;
+	  	return JSON.stringify(result);
 
 		
         } else {
