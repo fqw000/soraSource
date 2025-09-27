@@ -501,10 +501,10 @@ async function extractStreamUrl(url) {
 			
 			// 如果一切正常，但还是想查看数据，可以临时启用：
 			throw new Error(`API响应详情: ${JSON.stringify({
-			    status: '成功',
-			    code: json_data.code,
-			    dataLength: json_data.data.list.length,
-			    resolutions: json_data.data.list.map(item => item.resolutionName),
+			    // status: '成功',
+			    // code: json_data.code,
+			    // dataLength: json_data.data.list.length,
+			    // resolutions: json_data.data.list.map(item => item.resolutionName),
 			    fullData: json_data // 完整数据，但可能很长
 			}, null, 2)}`);
 
