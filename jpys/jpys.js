@@ -484,7 +484,7 @@ async function extractStreamUrl(url) {
         
         // 返回规范化的结果
         return result;
-		throw new Error('result - ${JSON.stringify(result)}');
+		throw new Error(`调试信息 - result: ${JSON.stringify(result, null, 2)}`);
 		
         } else {
             throw new Error('Invalid API response or no stream URL found');
