@@ -1,4 +1,3 @@
-
 async function searchResults(keyword) {
     const header = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
@@ -479,11 +478,8 @@ async function extractStreamUrl(url) {
 
 
        //    console.table(streams);
-
-		const debugObj = { apiUrl, pid, nid, t, signkey, md5Hash, sign };
-   		console.log('本地签名参数:', JSON.stringify(debugObj));
 		
-		throw new Error(`URL解析测试 - pid:${pid}, nid:${nid}, 完整URL:${url}`);
+		throw new Error(`URL解析测试 - apiUrl:${apizUrl}, pid:${pid}, nid:${nid}, t:${t}, signkey:${signkey}, md5Hah:${md5Hash}, sign:${sign}, 完整URL:${url}`);
         // 检查数据有效性并按照规范输出
         if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
         const streams = json_data.data.list.map(item => ({
