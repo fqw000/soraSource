@@ -483,21 +483,21 @@ async function extractStreamUrl(url) {
 
 		// 检查响应
 		// 检查响应结构
-			if (!json_data) {
-			    throw new Error('API返回空响应');
-			}
+			// if (!json_data) {
+			//     throw new Error('API返回空响应');
+			// }
 			
-			if (json_data.code !== 0) { // 假设API使用code表示状态
-			    throw new Error(`API错误: code=${json_data.code}, message=${json_data.message}`);
-			}
+			// if (json_data.code !== 0) { // 假设API使用code表示状态
+			//     throw new Error(`API错误: code=${json_data.code}, message=${json_data.message}`);
+			// }
 			
-			if (!json_data.data) {
-			    throw new Error(`API返回数据异常: ${JSON.stringify(json_data, null, 2)}`);
-			}
+			// if (!json_data.data) {
+			//     throw new Error(`API返回数据异常: ${JSON.stringify(json_data, null, 2)}`);
+			// }
 			
-			if (!json_data.data.list || json_data.data.list.length === 0) {
-			    throw new Error(`无流数据: ${JSON.stringify(json_data.data, null, 2)}`);
-			}
+			// if (!json_data.data.list || json_data.data.list.length === 0) {
+			//     throw new Error(`无流数据: ${JSON.stringify(json_data.data, null, 2)}`);
+			// }
 			
 			// 如果一切正常，但还是想查看数据，可以临时启用：
 			throw new Error(`API响应详情: ${JSON.stringify({
