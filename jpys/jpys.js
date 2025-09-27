@@ -460,51 +460,19 @@ async function extractStreamUrl(url) {
         // console.log('apiUrl : ', apiUrl);
         const response = await fetchv2(apiUrl, { headers: headers });
         const json_data = await response.json();
-
-        // 检查数据有效性并返回第一个流的URL
-        // if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
-        //     const streams = json_data.data.list.map(item => ({
-        //         title: item.resolutionName || 'Unknown Resolution',
-        //         streamUrl: item.url
-        //     }));
-        //     console.log(streams);
-        //     console.log('本地签名参数:', {
-        //         pid, nid, t, signkey, md5Hash, sign
-        //     });
-        //     return json_data.data.list[0].url;
-        // } else {
-        //     throw new Error('Invalid API response or no stream URL found');
-        // }
-
-
-       //    console.table(streams);
 		
 		// throw new Error(`URL解析测试 - apiUrl:${apiUrl}, pid:${pid}, nid:${nid}, t:${t}, signkey:${signkey}, md5Hah:${md5Hash}, sign:${sign}, 完整URL:${url}`);
 
-		// 检查响应
-		// 检查响应结构
-			// if (!json_data) {
-			//     throw new Error('API返回空响应');
-			// }
-			
-			// if (json_data.code !== 0) { // 假设API使用code表示状态
-			//     throw new Error(`API错误: code=${json_data.code}, message=${json_data.message}`);
-			// }
-			
-			// if (!json_data.data) {
-			//     throw new Error(`API返回数据异常: ${JSON.stringify(json_data, null, 2)}`);
-			// }
-			
-			// if (!json_data.data.list || json_data.data.list.length === 0) {
-			//     throw new Error(`无流数据: ${JSON.stringify(json_data.data, null, 2)}`);
-			// }
-			
-			// 如果一切正常，但还是想查看数据，可以临时启用：
+		// 检查响应,可以临时启用：
 			throw new Error(`API响应详情: ${JSON.stringify({
 			    // status: '成功',
 			    // code: json_data.code,
-			    // dataLength: json_data.data.list.length,
-			    // resolutions: json_data.data.list.map(item => item.resolutionName),
+				url: url,
+			    apiUrl: apiUrl,
+				t: t,
+				md5Hash: md5Hash,
+				signkey:signkey,
+				sign: sign,
 			    fullData: json_data // 完整数据，但可能很长
 			}, null, 2)}`);
 
