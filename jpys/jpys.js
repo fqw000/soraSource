@@ -501,8 +501,9 @@ async function extractStreamUrl(url) {
         // } else {
         //     throw new Error('Invalid API response or no stream URL found');
         // }
-		return "https://ppvod01.blbtgg.com/splitOut/20250802/944512/V2025080211123762732944512/index.m3u8?auth_key=1758971372-cdeb6564a9d74309a16dd31fc8749471-0-d02e9cb705f9ca6eeb050dcb5a9de812";
-
+		
+		// return "https://ppvod01.blbtgg.com/splitOut/20250802/944512/V2025080211123762732944512/index.m3u8?auth_key=1758971372-cdeb6564a9d74309a16dd31fc8749471-0-d02e9cb705f9ca6eeb050dcb5a9de812";
+		return "{\"streams\":[{\"title\":\"蓝光\",\"streamUrl\":\"https://ppvod01.blbtgg.com/splitOut/20250802/944500/V2025080211123662696944500/index.m3u8?auth_key=1758971372-4e62ec156ef540ee97acecc320a9762c-0-62040fc1cf085a571af433a90b1ff35a\",\"headers\":{}},{\"title\":\"高清\",\"streamUrl\":\"https://ppvod01.blbtgg.com/splitOut/20250802/944505/V2025080211151061787944505/index.m3u8?auth_key=1758971372-01c6791ddc6f480995f6d51dd3483ecc-0-34cb32dabceca42c8e6207bc62556217\",\"headers\":{}},{\"title\":\"标清\",\"streamUrl\":\"https://ppvod01.blbtgg.com/splitOut/20250802/944512/V2025080211123762732944512/index.m3u8?auth_key=1758971372-cdeb6564a9d74309a16dd31fc8749471-0-d02e9cb705f9ca6eeb050dcb5a9de812\",\"headers\":{}}]}";
     } catch (error) {
         throw new Error('Failed to extract stream URL: ' + error.message);
     }
