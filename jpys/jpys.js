@@ -466,7 +466,7 @@ async function extractStreamUrl(url) {
 				md5Hash: md5Hash,
 				signkey:signkey,
 				sign: sign,
-			    fullData: json_data // 完整数据，但可能很长
+			    fullData: json_data, // 完整数据，但可能很长
 				json_data_list: json_data.data ? json_data.data.list : 'N/A',
 				json_data_length: json_data.data ? json_data.data.list.length : 0
 			}, null, 2)}`);
