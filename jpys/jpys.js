@@ -428,80 +428,80 @@ async function extractStreamUrl(url) {
     // 以上为md5和sha1函数定义
 
     try {
-        console.log('开始获取stream URL', JSON.stringify({url}));
-        // 解析URL获取pid和nid
-        const parts = url.split('/');
-        const pid = parts[5];
-        const nid = parts[7];
+    //     console.log('开始获取stream URL', JSON.stringify({url}));
+    //     // 解析URL获取pid和nid
+    //     const parts = url.split('/');
+    //     const pid = parts[5];
+    //     const nid = parts[7];
 
-        // const t = new Date().getTime();
-        const t = Date.now();
+    //     // const t = new Date().getTime();
+    //     const t = Date.now();
 
-        // 生成签名
-        // const signkey = 'clientType=1&id=' + pid + '&nid=' + nid + '&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
-        // const md5Hash = crypto.createHash('md5').update(signkey).digest('hex');
-        // const sign = crypto.createHash('sha1').update(md5Hash).digest('hex');
+    //     // 生成签名
+    //     // const signkey = 'clientType=1&id=' + pid + '&nid=' + nid + '&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
+    //     // const md5Hash = crypto.createHash('md5').update(signkey).digest('hex');
+    //     // const sign = crypto.createHash('sha1').update(md5Hash).digest('hex');
 
-        const signkey = 'clientType=1&id=' + pid + '&nid=' + nid + '&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
-        const md5Hash = md5(signkey);  // 替换 crypto.createHash('md5').update(signkey).digest('hex')
-        const sign = sha1(md5Hash);    // 替换 crypto.createHash('sha1').update(md5Hash).digest('hex')
+    //     const signkey = 'clientType=1&id=' + pid + '&nid=' + nid + '&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
+    //     const md5Hash = md5(signkey);  // 替换 crypto.createHash('md5').update(signkey).digest('hex')
+    //     const sign = sha1(md5Hash);    // 替换 crypto.createHash('sha1').update(md5Hash).digest('hex')
 
-        console.log('MD5 Hash:', JSON.stringify({md5Hash}));
-        console.log('SHA1 Sign:', JSON.stringify({sign}));
+    //     console.log('MD5 Hash:', JSON.stringify({md5Hash}));
+    //     console.log('SHA1 Sign:', JSON.stringify({sign}));
 
 
-        const headers = {
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
-            'deviceid': '63ffad23-a598-4f96-85d7-7bf5f3e4a0a2',
-            'sign': sign,
-            't': t.toString()
-        };
+    //     const headers = {
+    //         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+    //         'deviceid': '63ffad23-a598-4f96-85d7-7bf5f3e4a0a2',
+    //         'sign': sign,
+    //         't': t.toString()
+    //     };
 
-        const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
-        // console.log('apiUrl : ', apiUrl);
-        const response = await fetchv2(apiUrl, { headers: headers });
-        const json_data = await response.json();
+    //     const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
+    //     // console.log('apiUrl : ', apiUrl);
+    //     const response = await fetchv2(apiUrl, { headers: headers });
+    //     const json_data = await response.json();
 
-        // 检查数据有效性并返回第一个流的URL
-        // if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
-        //     const streams = json_data.data.list.map(item => ({
-        //         title: item.resolutionName || 'Unknown Resolution',
-        //         streamUrl: item.url
-        //     }));
-        //     console.log(streams);
-        //     console.log('本地签名参数:', {
-        //         pid, nid, t, signkey, md5Hash, sign
-        //     });
-        //     return json_data.data.list[0].url;
+    //     // 检查数据有效性并返回第一个流的URL
+    //     // if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
+    //     //     const streams = json_data.data.list.map(item => ({
+    //     //         title: item.resolutionName || 'Unknown Resolution',
+    //     //         streamUrl: item.url
+    //     //     }));
+    //     //     console.log(streams);
+    //     //     console.log('本地签名参数:', {
+    //     //         pid, nid, t, signkey, md5Hash, sign
+    //     //     });
+    //     //     return json_data.data.list[0].url;
+    //     // } else {
+    //     //     throw new Error('Invalid API response or no stream URL found');
+    //     // }
+
+
+    //    //    console.table(streams);
+    //     console.log('本地签名参数:', JSON.stringify({ apiUrl, pid, nid, t, signkey, md5Hash, sign }));
+
+    //     // 检查数据有效性并按照规范输出
+    //     if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
+    //     const streams = json_data.data.list.map(item => ({
+    //         title: item.resolutionName || 'Unknown Resolution',
+    //         streamUrl: item.url,
+    //         headers: {}  // 根据文档要求添加空的headers对象
+    //     }));
+                
+    //     // 按照文档规范输出
+    //     const result = {
+    //         streams: streams,
+    //     };
+        
+        // 返回规范化的结果
+        // return JSON.stringify(result);
+        // return result;   
+
         // } else {
         //     throw new Error('Invalid API response or no stream URL found');
         // }
-
-
-       //    console.table(streams);
-        console.log('本地签名参数:', JSON.stringify({ apiUrl, pid, nid, t, signkey, md5Hash, sign }));
-
-        // 检查数据有效性并按照规范输出
-        if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
-        const streams = json_data.data.list.map(item => ({
-            title: item.resolutionName || 'Unknown Resolution',
-            streamUrl: item.url,
-            headers: {}  // 根据文档要求添加空的headers对象
-        }));
-                
-        // 按照文档规范输出
-        const result = {
-            streams: streams,
-        };
-        
-
-        
-        // 返回规范化的结果
-        return JSON.stringify(result);
-            
-        } else {
-            throw new Error('Invalid API response or no stream URL found');
-        }
+		return "https://ppvod01.blbtgg.com/splitOut/20250802/944512/V2025080211123762732944512/index.m3u8?auth_key=1758971372-cdeb6564a9d74309a16dd31fc8749471-0-d02e9cb705f9ca6eeb050dcb5a9de812";
 
     } catch (error) {
         throw new Error('Failed to extract stream URL: ' + error.message);
