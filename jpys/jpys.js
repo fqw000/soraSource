@@ -8,7 +8,7 @@ async function searchResults(keyword) {
     const searchUrl = `https://www.hnytxj.com/vod/search/${encodeURIComponent(keyword)}`;
     try {
         console.log("🔍 开始搜索硬盘，目标URL:", searchUrl);
-        const response = await fetch(searchUrl, header);
+        const response = await fetchv2(searchUrl, header);
         console.log("✅ 页面请求成功，状态码:", response.status);
         const htmlRaw = await response.text();
         console.log("📄 获取到HTML内容，长度:", htmlRaw.length, "字符");
