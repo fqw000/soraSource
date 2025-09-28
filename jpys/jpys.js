@@ -1,4 +1,3 @@
-
 async function searchResults(keyword) {
     const header = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
@@ -9,7 +8,7 @@ async function searchResults(keyword) {
     const searchUrl = `https://www.hnytxj.com/vod/search/${encodeURIComponent(keyword)}`;
     try {
         console.log("🔍 开始搜索硬盘，目标URL:", searchUrl);
-        const response = await fetchv2(searchUrl, header);
+        const response = await fetch(searchUrl, header);
         console.log("✅ 页面请求成功，状态码:", response.status);
         const html = await response.text();
         console.log("📄 获取到HTML内容，长度:", html.length, "字符");
@@ -61,7 +60,7 @@ async function extractDetails(url) {
         // 'Referer': searchUrl  // ✅ 使用搜索页URL
     };
     console.log("🔍 开始提取详情，目标URL:", url);
-    const response = await fetchv2(url, header);
+    const response = await fetch(url, header);
     console.log("✅ 页面请求成功，状态码:", response.status);
     const html = await response.text();
     console.log("📄 获取到HTML内容，长度:", html.length, "字符");
@@ -100,7 +99,7 @@ async function extractEpisodes(url) {
         'Accept-Language': 'zh-CN,zh;q=0.9'
     }
     
-    const response = await fetchv2(url, header);
+    const response = await fetch(url, header);
     console.log("✅ 页面请求成功，状态码:", response.status);
     const html = await response.text();
     console.log("📄 获取到HTML的长度:", html.length, "字符");
@@ -195,9 +194,19 @@ async function extractEpisodes(url) {
         }
     }
     // 检查响应,可以临时启用：
-	throw new Error(`HTTP错误! 状态: ${response.status}, URL: ${url}, jsonMatch : ${JSON.stringify(jsonMatch)}, hrefs: ${episodes.length}, episodes: ${JSON.stringify(episodes)}`);
+        throw new Error(`
+        === extractEpisodes 调试信息 ===
+        URL: ${url}
+        HTTP状态码: ${response.status}
+        HTML长度: ${html.length}
+        CID: ${cid}
+        episodeListMatch: ${episodeListMatch ? '✅ 找到' : '❌ 未找到'}
+        提取到的剧集数量: ${episodes.length}
+        剧集详情: ${JSON.stringify(episodes, null, 2)}
+        ============================
+        `);
 
-    console.log(`✅ 成功提取 ${episodes.length} 个剧集`);
+    // console.log(`✅ 成功提取 ${episodes.length} 个剧集`);
     // console.table(episodes);
     return JSON.stringify(episodes);
 }
@@ -534,7 +543,7 @@ async function extractStreamUrl(url) {
         };
 
         const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
-        const response = await fetchv2(apiUrl, headers);
+        const response = await fetch(apiUrl, headers);
         const json_data = await response.json();
 		
 		// 检查响应,可以临时启用：
@@ -586,7 +595,6 @@ async function extractStreamUrl(url) {
 // extractDetails("https://www.hnytxj.com/detail/107070").then(console.log);
  // extractEpisodes("https://www.hnytxj.com/detail/107070").then(console.log);
 // extractStreamUrl("https://www.hnytxj.com/vod/play/107070/sid/554915").then(console.log);
-// 使用示例
 // extractStreamUrl("https://www.hnytxj.com/vod/play/139196/sid/1231041")
 //   .then(streamUrl => {
 //     console.log('提取的视频流URL:', streamUrl);
