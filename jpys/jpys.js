@@ -1,3 +1,4 @@
+
 async function searchResults(keyword) {
     const header = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
@@ -194,8 +195,7 @@ async function extractEpisodes(url) {
         }
     }
     // 检查响应,可以临时启用：
-	throw new Error(`HTTP错误! 状态: ${response.status}, URL: ${url}, jsonMatch : ${JSON.stringify(jsonMatch)}, hrefs: ${episodes.length}`, episodes: ${JSON.stringify(episodes)});
-		
+	throw new Error(`HTTP错误! 状态: ${response.status}, URL: ${url}, jsonMatch : ${JSON.stringify(jsonMatch)}, hrefs: ${episodes.length}, episodes: ${JSON.stringify(episodes)}`);
 
     console.log(`✅ 成功提取 ${episodes.length} 个剧集`);
     // console.table(episodes);
