@@ -8,7 +8,7 @@ async function searchResults(keyword) {
     const searchUrl = `https://www.hnytxj.com/vod/search/${encodeURIComponent(keyword)}`;
     try {
         console.log("🔍 开始搜索硬盘，目标URL:", searchUrl);
-        const response = await fetch(searchUrl, header);
+        const response = await fetchv2(searchUrl, header);
         console.log("✅ 页面请求成功，状态码:", response.status);
         const html = await response.text();
         console.log("📄 获取到HTML内容，长度:", html.length, "字符");
@@ -60,7 +60,7 @@ async function extractDetails(url) {
         // 'Referer': searchUrl  // ✅ 使用搜索页URL
     };
     console.log("🔍 开始提取详情，目标URL:", url);
-    const response = await fetch(url, header);
+    const response = await fetchv2(url, header);
     console.log("✅ 页面请求成功，状态码:", response.status);
     const html = await response.text();
     console.log("📄 获取到HTML内容，长度:", html.length, "字符");
@@ -99,7 +99,7 @@ async function extractEpisodes(url) {
         'Accept-Language': 'zh-CN,zh;q=0.9'
     }
     
-    const response = await fetch(url, header);
+    const response = await fetchv2(url, header);
     console.log("✅ 页面请求成功，状态码:", response.status);
     const html = await response.text();
     console.log("📄 获取到HTML的长度:", html.length, "字符");
@@ -534,7 +534,7 @@ async function extractStreamUrl(url) {
         };
 
         const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
-        const response = await fetch(apiUrl, headers);
+        const response = await fetchv2(apiUrl, headers);
         const json_data = await response.json();
 		
 		// 检查响应,可以临时启用：
