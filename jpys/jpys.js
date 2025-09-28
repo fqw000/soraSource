@@ -127,8 +127,8 @@ async function extractEpisodes(url) {
     const episodeListRegex = /episodeList":(\[[^\]]*\])/s;
     const episodeListMatch = decodedHtml.match(episodeListRegex);
     
-    console.log('episodeListMatch: ----------', episodeListMatch ? '找到匹配' : '未找到匹配');
-    console.log("提取结束");
+    //console.log('episodeListMatch: ----------', episodeListMatch ? '找到匹配' : '未找到匹配');
+    // console.log("提取结束");
 
     if (episodeListMatch) {
         console.log("✅ 找到episodeList数据");
@@ -196,7 +196,7 @@ async function extractEpisodes(url) {
             }
         }
     }
-    throw new error(`episodes: ${peisodes}`);
+    throw new error(`episodes: ${episodes}`);
 
     console.log(`✅ 成功提取 ${episodes.length} 个剧集`);
     // console.table(episodes);
