@@ -91,33 +91,114 @@ async function extractDetails(url) {
 }
 
 async function extractEpisodes(url) {
-
     console.log("🔍 开始提取剧集，目标URL:", url);
 
-    const SCRAPINGBEE_API_KEY = 'DCRBF5EH2699UPEQUXDGL0YYE57TNFGT411LY957EX7JUROJF4JWQ7XTWEJ37JKDQ8C5OKGKGKHZ40G7';
-
-    const api_url = `https://app.scrapingbee.com/api/v1/?api_key=${SCRAPINGBEE_API_KEY}&url=${encodeURIComponent(url)}&render_js=true&wait_for=.listitem`;
-
-    const response = await fetchv2(api_url);
+    const header = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'zh-CN,zh;q=0.9'
+    }
+    
+    const response = await fetch(url, header);
     console.log("✅ 页面请求成功，状态码:", response.status);
     const html = await response.text();
-    console.log("📄 获取到HTML内容，长度:", html.length, "字符");
+    console.log("📄 获取到HTML的长度:", html.length, "字符");
+
+    // 从URL提取cid
+    const cidMatch = url.match(/\/(\d+)$/);
+    if (!cidMatch) {
+        console.error("❌ 无法从URL中提取cid");
+        return JSON.stringify([]);
+    }
+    const cid = cidMatch[1];
+    console.log("✅ 提取到cid:", cid);
+
     const episodes = [];
 
-    const regex = /<div class=" listitem"><a href="(\/vod\/play\/\d+\/sid\/\d+)">(\d+)<\/a><\/div>/g;
+    // 解码HTML实体和转义字符
+    const decodedHtml = html
+        .replace(/\\"/g, '"')
+        .replace(/\\n/g, '')
+        .replace(/\\r/g, '')
+        .replace(/\\t/g, '')
+        .replace(/\\/g, '');
 
-    let match;
-    while ((match = regex.exec(html)) !== null) {
-        const href = match[1].startsWith('http') ? match[1] : `https://www.hnytxj.com${match[1]}`;
-        const episodeNumber = parseInt(match[2], 10);
+    // 匹配episodeList数组
+    const episodeListRegex = /episodeList":(\[[^\]]*\])/s;
+    const episodeListMatch = decodedHtml.match(episodeListRegex);
+    
+    console.log('episodeListMatch: ----------', episodeListMatch ? '找到匹配' : '未找到匹配');
+    console.log("提取结束");
 
-        episodes.push({
-            href: href.trim(),
-            number: episodeNumber
-        });
+    if (episodeListMatch) {
+        console.log("✅ 找到episodeList数据");
+        
+        try {
+            // 方法1：直接解析JSON
+            const episodeListStr = episodeListMatch[1];
+            console.log("提取到的JSON字符串:", episodeListStr.substring(0, 100) + "...");
+            
+            const episodeData = JSON.parse(episodeListStr);
+            console.log(`✅ 成功解析 ${episodeData.length} 个剧集项`);
+            
+            episodeData.forEach(item => {
+                const href = `https://www.hnytxj.com/vod/play/${cid}/sid/${item.nid}`;
+                
+                episodes.push({
+                    href: href.trim(),
+                    number: parseInt(item.name, 10)
+                });
+            });
+            
+        } catch (parseError) {
+            console.log("❌ JSON解析失败，尝试备用方法:", parseError.message);
+            
+            // 方法2：在提取到的episodeList字符串上执行正则匹配
+            const episodeListStr = episodeListMatch[1];
+            const itemRegex = /"nid":([^,]+),"name":"([^"]+)"/g;
+            let match;
+            
+            while ((match = itemRegex.exec(episodeListStr)) !== null) {
+                const nid = match[1];
+                const name = match[2];
+                const href = `https://www.hnytxj.com/vod/play/${cid}/sid/${nid}`;
+                
+                episodes.push({
+                    href: href.trim(),
+                    number: parseInt(name, 10)
+                });
+            }
+            
+            console.log(`备用方法提取到 ${episodes.length} 个剧集`);
+        }
+    } else {
+        console.log("❌ 未找到episodeList数据，尝试备用匹配方法");
+        
+        // 备用方法：直接匹配JSON结构中的episodeList
+        const jsonRegex = /"episodeList":(\[.*?\])/s;
+        const jsonMatch = decodedHtml.match(jsonRegex);
+        
+        if (jsonMatch) {
+            try {
+                const episodeListStr = jsonMatch[1];
+                const episodeData = JSON.parse(episodeListStr);
+                
+                episodeData.forEach(item => {
+                    const href = `https://www.hnytxj.com/vod/play/${cid}/sid/${item.nid}`;
+                    
+                    episodes.push({
+                        href: href.trim(),
+                        number: parseInt(item.name, 10)
+                    });
+                });
+            } catch (e) {
+                console.error("❌ 解析episodeList失败:", e);
+            }
+        }
     }
 
-    console.log(episodes);
+    console.log(`✅ 成功提取 ${episodes.length} 个剧集`);
+    // console.table(episodes);
     return JSON.stringify(episodes);
 }
 
