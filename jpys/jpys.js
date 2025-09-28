@@ -57,7 +57,7 @@ async function searchResults(keyword) {
             return fallbackSearch(htmlRaw);
         }
 
-        console.table(results);
+        // console.table(results);
         return JSON.stringify(results);
     } catch (err) {
         console.error("Search error:", err);
