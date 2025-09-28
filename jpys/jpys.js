@@ -196,6 +196,7 @@ async function extractEpisodes(url) {
             }
         }
     }
+    throw new error(`episodes: ${peisodes}`);
 
     console.log(`✅ 成功提取 ${episodes.length} 个剧集`);
     // console.table(episodes);
