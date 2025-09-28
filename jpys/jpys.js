@@ -194,7 +194,7 @@ async function extractEpisodes(url) {
         }
     }
     // 检查响应,可以临时启用：
-			throw new Error(`HTTP错误! 状态: ${response.status}, URL: ${url},episodesmatch: ${!!episodesMatch}, hrefs: ${episodes.length}`);
+	throw new Error(`HTTP错误! 状态: ${response.status}, URL: ${url}, jsonMatch : ${JSON.stringify(jsonMatch)}, hrefs: ${episodes.length}`, episodes: ${JSON.stringify(episodes)});
 		
 
     console.log(`✅ 成功提取 ${episodes.length} 个剧集`);
