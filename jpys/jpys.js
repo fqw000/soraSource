@@ -8,39 +8,56 @@ async function searchResults(keyword) {
     const searchUrl = `https://www.hnytxj.com/vod/search/${encodeURIComponent(keyword)}`;
     try {
         console.log("🔍 开始搜索硬盘，目标URL:", searchUrl);
-        const response = await fetchv2(searchUrl, header);
+        const response = await fetch(searchUrl, header);
         console.log("✅ 页面请求成功，状态码:", response.status);
-        const html = await response.text();
-        console.log("📄 获取到HTML内容，长度:", html.length, "字符");
+        const htmlRaw = await response.text();
+        console.log("📄 获取到HTML内容，长度:", htmlRaw.length, "字符");
+
+        const html = htmlRaw
+            .replace(/\\"/g, '"')      // 处理转义的双引号
+            .replace(/\\n/g, '')       // 移除换行符
+            .replace(/\\r/g, '')       // 移除回车符
+            .replace(/\\t/g, '')       // 移除制表符
+            .replace(/\\u0026/g, '&'); // 处理Unicode转义
 
         const results = [];
 
-        // 改进的正则表达式，处理标题中可能包含的样式标签
-        const regex = /<a href="(\/detail\/\d+)"[^>]*>[\s\S]*?<img[^>]*src="([^"]*)"[^>]*>[\s\S]*?<div class="title">([\s\S]*?)<\/div>/g;
-        let match;
+        // 从HTML中提取JSON数据 
+        const jsonRegex = /"list":(\[\{[^\]]*\])/;
+        const jsonMatch = html.match(jsonRegex);
 
-        while ((match = regex.exec(html)) !== null) {
-            // 确保URL是完整的
-            const href = match[1].startsWith('http') ? match[1] : `https://www.hnytxj.com${match[1]}`;
-
-            // 处理图片
-            const image_format = match[2].replace(/\?.*$/, '');
-            const image = image_format.startsWith('http') ? image_format : `https://www.hnytxj.com${image_format}`;
-
-            // 提取标题 - 需要清理HTML标签
-            let title = match[3]
-
-            // 清理标题中的HTML标签（特别是<span style>标签）
-            const title_cleaned = title.replace(/<span[^>]*>|<\/span>/g, '').trim();
-
-            results.push({
-                title: title_cleaned.trim(),
-                image: image.trim(),
-                href: href.trim()
-            });
+        if (jsonMatch && jsonMatch[1]) {
+            try {
+                const movieList = JSON.parse(jsonMatch[1]);
+                // console.log("movielist", movieList);
+                console.log(`🎬 找到 ${movieList.length} 部影片`);
+                
+                // 处理每部影片
+                movieList.forEach(movie => {
+                    const href = `https://www.hnytxj.com/detail/${movie.vodId}`;
+                    const image = movie.vodPic;
+                    const title = movie.vodName;
+                    
+                    results.push({
+                        title: title.trim(),
+                        image: image.trim(),
+                        href: href.trim()
+                    });
+                });
+                
+            } catch (jsonError) {
+                console.error("JSON解析错误:", jsonError.message);
+                console.log("❌ JSON解析失败，使用备选搜索方案");
+                // JSON解析失败时使用备选方案
+                return fallbackSearch(htmlRaw);
+            }
+        } else {
+            console.log("❌ 未找到JSON数据，使用备选搜索方案");
+            // 未找到JSON数据时使用备选方案
+            return fallbackSearch(htmlRaw);
         }
 
-        console.log(results);
+        console.table(results);
         return JSON.stringify(results);
     } catch (err) {
         console.error("Search error:", err);
@@ -49,6 +66,28 @@ async function searchResults(keyword) {
             image: "https://i.ibb.co/Y4b38sTG/Search-has-no-images.png",
             href: "javascript:void(0)"
         }]);
+    }
+    
+    // 备选搜索方案
+    function fallbackSearch(html) {
+        const results = [];
+        const regex = /<a href="(\/detail\/\d+)"[^>]*>[\s\S]*?<img[^>]*src="([^"]*)"[^>]*>[\s\S]*?<div class="title">([\s\S]*?)<\/div>/g;
+        let match;
+
+        while ((match = regex.exec(html)) !== null) {
+            const href = match[1].startsWith('http') ? match[1] : `https://www.hnytxj.com${match[1]}`;
+            const image_format = match[2].replace(/\?.*$/, '');
+            const image = image_format.startsWith('http') ? image_format : `https://www.hnytxj.com${image_format}`;
+            let title = match[3];
+            const title_cleaned = title.replace(/<span[^>]*>|<\/span>/g, '').trim();
+
+            results.push({
+                title: title_cleaned.trim(),
+                image: image.trim(),
+                href: href.trim()
+            });
+        }
+        return results;
     }
 }
 
