@@ -8,7 +8,7 @@ async function searchResults(keyword) {
     const searchUrl = `https://www.hnytxj.com/vod/search/${encodeURIComponent(keyword)}`;
     try {
         console.log("🔍 开始搜索硬盘，目标URL:", searchUrl);
-        const response = await fetchv2(searchUrl, header);
+        const response = await fetch(searchUrl, header);
         console.log("✅ 页面请求成功，状态码:", response.status);
         const html = await response.text();
         console.log("📄 获取到HTML内容，长度:", html.length, "字符");
@@ -60,7 +60,7 @@ async function extractDetails(url) {
         // 'Referer': searchUrl  // ✅ 使用搜索页URL
     };
     console.log("🔍 开始提取详情，目标URL:", url);
-    const response = await fetchv2(url, header);
+    const response = await fetch(url, header);
     console.log("✅ 页面请求成功，状态码:", response.status);
     const html = await response.text();
     console.log("📄 获取到HTML内容，长度:", html.length, "字符");
@@ -126,9 +126,6 @@ async function extractEpisodes(url) {
     // 匹配episodeList数组
     const episodeListRegex = /episodeList":(\[[^\]]*\])/s;
     const episodeListMatch = decodedHtml.match(episodeListRegex);
-    
-    //console.log('episodeListMatch: ----------', episodeListMatch ? '找到匹配' : '未找到匹配');
-    // console.log("提取结束");
 
     if (episodeListMatch) {
         console.log("✅ 找到episodeList数据");
@@ -196,7 +193,9 @@ async function extractEpisodes(url) {
             }
         }
     }
-    throw new error(`episodes: ${episodes}`);
+    // 检查响应,可以临时启用：
+			throw new Error(`HTTP错误! 状态: ${response.status}, URL: ${url},episodesmatch: ${!!episodesMatch}, hrefs: ${episodes.length}`);
+		
 
     console.log(`✅ 成功提取 ${episodes.length} 个剧集`);
     // console.table(episodes);
@@ -535,7 +534,7 @@ async function extractStreamUrl(url) {
         };
 
         const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
-        const response = await fetchv2(apiUrl, headers);
+        const response = await fetch(apiUrl, headers);
         const json_data = await response.json();
 		
 		// 检查响应,可以临时启用：
@@ -585,7 +584,7 @@ async function extractStreamUrl(url) {
 
 // searchResults("战").then(console.log);
 // extractDetails("https://www.hnytxj.com/detail/107070").then(console.log);
-//  extractEpisodes("https://www.hnytxj.com/detail/107070").then(console.log);
+ extractEpisodes("https://www.hnytxj.com/detail/107070").then(console.log);
 // extractStreamUrl("https://www.hnytxj.com/vod/play/107070/sid/554915").then(console.log);
 // 使用示例
 // extractStreamUrl("https://www.hnytxj.com/vod/play/139196/sid/1231041")
