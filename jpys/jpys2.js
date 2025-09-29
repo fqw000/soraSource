@@ -313,9 +313,6 @@ async function searchResults(keyword) {
 		};
 		const response = await fetchv2(`https://hnytxj.com/vod/search/${encodedKeyword}?_rsc=xsbs6`, { headers });
 
-		console.log("response:", response);
-		throw new Error(`response: ${response.status}, ${response.statusText}`);
-
 		if (!response.ok) {
 			throw new Error(`HTTP error! status: ${response.status}`);
 		}
@@ -330,6 +327,11 @@ async function searchResults(keyword) {
 			data = await response.text();
 		}
 
+		throw new error(`
+			状态: ${response.status} ${response.statusText}
+			URL: ${response.url}
+			完整响应: ${data}
+			`);
 		const pageRegex = /"result":.*"totalPage":(\d+)/
 		const match = data.match(pageRegex);
 		const totalPage = match ? parseInt(match[1], 10) : 1;
