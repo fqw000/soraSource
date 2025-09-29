@@ -350,10 +350,9 @@ async function searchResults(keyword) {
         const allResults = [];
         
         for (let currentPage = 1; currentPage <= pagesToFetch; currentPage++) {
-            // const pageNum = currentPage.toString();
-            // const t = Date.now();
-            const pageNum = '3';
-            const t = '1759156448781';
+            const pageNum = currentPage.toString();
+            const t = Date.now();
+
             const singKey = 'keyword=' + keyword + '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&type=false&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
 
             const searchUrl = "https://www.hnytxj.com/api/mw-movie/anonymous/video/searchByWord?keyword=" + encodedKeyword + "&pageNum=" + pageNum + "&pageSize=" + pageSize + "&type=false";
