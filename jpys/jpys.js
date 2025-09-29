@@ -314,7 +314,7 @@ async function searchResults(keyword) {
         const headers = {
             'RSC': '1'
         };
-        const response = await fetch(`https://hnytxj.com/vod/search/${encodedKeyword}?_rsc=xsbs6`, { headers });
+        const response = await fetchv2(`https://hnytxj.com/vod/search/${encodedKeyword}?_rsc=xsbs6`, { headers });
 
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
@@ -361,7 +361,7 @@ async function searchResults(keyword) {
             console.log(`🔍 正在获取第 ${currentPage} 页数据...`);
             
             try {
-                const response2 = await fetch(searchUrl, {
+                const response2 = await fetchv2(searchUrl, {
                     headers: {
                         Referer: 'https://hnytxj.com/',
                         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
