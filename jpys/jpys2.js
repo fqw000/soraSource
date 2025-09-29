@@ -316,7 +316,9 @@ async function searchResults(keyword) {
         };
         const response = await fetchv2(`https://hnytxj.com/vod/search/${encodedKeyword}?_rsc=xsbs6`, { headers });
 
-
+		console.log("response:", response);
+		throw new Error('response: ${response.status}, ${response}.statusText');
+		
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -428,7 +430,7 @@ async function extractStreamUrl(url) {
 
 }
 
-// searchResults("战").then(console.log);
+searchResults("战").then(console.log);
 // extractDetails("https://www.hnytxj.com/detail/107070").then(console.log);
  // extractEpisodes("https://www.hnytxj.com/detail/107070").then(console.log);
 // extractStreamUrl("https://www.hnytxj.com/vod/play/107070/sid/554915").then(console.log);
