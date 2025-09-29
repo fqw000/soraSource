@@ -352,6 +352,7 @@ async function searchResults(keyword) {
             const searchUrl = "https://www.hnytxj.com/api/mw-movie/anonymous/video/searchByWord?keyword=" + encodedKeyword + "&pageNum=" + pageNum + "&pageSize=" + pageSize + "&type=false";
             const sign = sha1(md5(signKey));
             console.log("sign:", sign, "t:", t, "signKey:", signKey);
+            throw new Error("sign：" + sign + " t:" + t + " signKey:" + signKey);
             console.log(`🔍 正在获取第 ${currentPage} 页数据...`);
 
             try {
