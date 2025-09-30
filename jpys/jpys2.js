@@ -2,7 +2,7 @@ async function searchResults(keyword) {
     const header = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
         'Accept': '*/*',
-        'RSC': '1'，
+        'RSC': '1',
         'DNT': '1'
     };
     const searchUrl = `https://hnytxj.com/vod/search/${encodeURIComponent(keyword)}?_rsc=xsbs6`;
@@ -13,7 +13,7 @@ async function searchResults(keyword) {
         const html = await response.json();
         console.log("📄 获取到HTML内容，长度:", html.length, "字符");
         
-    throw new Error(`
+        throw new Error(`
             === fetchv2 调试信息 ===
             URL: ${searchUrl}
             HTTP状态码: ${response.status}
@@ -28,9 +28,7 @@ async function searchResults(keyword) {
             image: "",
             href: ""
         });
-        }
 
-        // console.table(results);
         return JSON.stringify(results);
     } catch (err) {
         console.error("Search error:", err);
