@@ -349,47 +349,46 @@ async function searchResults(keyword) {
             }
             throw new Error(JSON.stringify(debuggerInfo, null, 2));
 
+		// 	try {
+		// 		const response2 = await fetchv2(searchUrl, {
+		// 			headers: {
+		// 				Referer: 'https://hnytxj.com/',
+		// 				'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+		// 				sign: sign,
+		// 				t: t
+		// 			}
+		// 		});
 
-			try {
-				const response2 = await fetchv2(searchUrl, {
-					headers: {
-						Referer: 'https://hnytxj.com/',
-						'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-						sign: sign,
-						t: t
-					}
-				});
+		// 		const json_data = await response2.json();
+		// 		const movieList = json_data.data?.result?.list;
+		// 		console.log("json_data:", json_data);
 
-				const json_data = await response2.json();
-				const movieList = json_data.data?.result?.list;
-				console.log("json_data:", json_data);
+		// 		if (movieList && movieList.length > 0) {
+		// 			console.log(`🎬 第 ${currentPage} 页找到 ${movieList.length} 部影片`);
 
-				if (movieList && movieList.length > 0) {
-					console.log(`🎬 第 ${currentPage} 页找到 ${movieList.length} 部影片`);
+		// 			// 处理每部影片
+		// 			movieList.forEach(movie => {
+		// 				const href = `https://www.hnytxj.com/detail/${movie.vodId}`;
+		// 				const image = movie.vodPic;
+		// 				const title = movie.vodName;
 
-					// 处理每部影片
-					movieList.forEach(movie => {
-						const href = `https://www.hnytxj.com/detail/${movie.vodId}`;
-						const image = movie.vodPic;
-						const title = movie.vodName;
+		// 				allResults.push({
+		// 					title: title?.trim() || '',
+		// 					image: image?.trim() || '',
+		// 					href: href?.trim() || ''
+		// 				});
+		// 			});
 
-						allResults.push({
-							title: title?.trim() || '',
-							image: image?.trim() || '',
-							href: href?.trim() || ''
-						});
-					});
+		// 		} else {
+		// 			console.log(`❌ 第 ${currentPage} 页没有找到影片数据`);
+		// 		}
 
-				} else {
-					console.log(`❌ 第 ${currentPage} 页没有找到影片数据`);
-				}
+		// 		// 添加延迟避免请求过快
+		// 		await new Promise(resolve => setTimeout(resolve, 100));
 
-				// 添加延迟避免请求过快
-				await new Promise(resolve => setTimeout(resolve, 100));
-
-			} catch (error) {
-				console.error(`❌ 获取第 ${currentPage} 页数据时出错:`, error);
-			}
+		// 	} catch (error) {
+		// 		console.error(`❌ 获取第 ${currentPage} 页数据时出错:`, error);
+		// 	}
 		}
 
 		return JSON.stringify(allResults);
