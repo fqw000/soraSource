@@ -18,10 +18,7 @@ async function searchResults(keyword) {
         // 第一步：获取第一页并解析总页数
         console.log(`📄 请求第一页: ${firstPageUrl}`);
         const firstPageResponse = await fetchv2(firstPageUrl, headers);
-
-        if (!firstPageResponse.ok) {
-            throw new Error(`第一页HTTP错误! 状态码: ${firstPageResponse.status}`);
-        }
+        console.log(`✅ 页面请求成功，状态码: ${firstPageResponse.status}`);
 
         const firstPageHtml = await firstPageResponse.text();
         console.log(`✅ 第一页获取成功，长度: ${firstPageHtml.length} 字符`);
@@ -64,7 +61,7 @@ async function searchResults(keyword) {
                     console.log(`✅ 第 ${currentPage} 页获取成功，找到 ${pageResults.length} 个项目`);
 
                 } catch (pageError) {
-                    console.error(`❌ 获取第 ${currentPage} 页数据时出错:`, pageError.message);
+                    console.error(`❌ 获取第 ${currentPage} 页数据时出错: ${pageError.message}`);
                     // 继续获取下一页，不中断整个流程
                 }
             }
@@ -81,11 +78,11 @@ async function searchResults(keyword) {
         return JSON.stringify(uniqueResults, null, 2);
 
     } catch(err) {
-        console.error('💥 搜索过程发生错误:', err.message);
+        console.error(“💥 搜索过程发生错误:”, err.message);
         return JSON.stringify([{
             title: "搜索出错: " + err.message,
             image: "https://i.ibb.co/Y4b38sTG/Search-has-no-images.png",
-            href: "javascript:void(0)"
+            href: ‘’
         }], null, 2);
     }
 }
