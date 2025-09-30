@@ -14,7 +14,7 @@ async function searchResults(keyword) {
     
     // 测试 response.json()
     const html = await response.json().catch(error => {
-        throw new Error(`🚨 JSON_PARSE_ERROR: ${error.message} | Status: ${response.status}`| 值： ${html});
+        throw new Error(`🚨 JSON_PARSE_ERROR: ${error.message} | Status: ${response.status} | 值： ${html} `);
     });
     
     // 成功
