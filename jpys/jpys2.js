@@ -8,7 +8,7 @@ async function searchResults(keyword) {
     const searchUrl = `https://hnytxj.com/vod/search/${encodeURIComponent(keyword)}?_rsc=xsbs6`;
     
     const response = await fetchv2(searchUrl, header);
-    const data = await response.json();
+    const data = await response.text();
     const pageRegex = /"result":.*"totalPage":(\d+)/
     const match = data.match(pageRegex);
     throw new Error(`--------------
