@@ -367,10 +367,10 @@ function utf8Encode(string) {
  * @returns {string} JSON格式的搜索结果
  */
 async function searchResults(keyword) {
-    console.log("🎯 ==========================================");
-    console.log("🎯 开始搜索影片");
-    console.log("🎯 ==========================================");
-    console.log(`🔍 搜索关键词: ${keyword}`);
+//     console("🎯 ==========================================");
+//     console("🎯 开始搜索影片");
+//     console("🎯 ==========================================");
+//     console(`🔍 搜索关键词: ${keyword}`);
 
     try {
         const encodedKeyword = encodeURIComponent(keyword);
@@ -382,7 +382,7 @@ async function searchResults(keyword) {
         };
         
         const searchUrl = `https://hnytxj.com/vod/search/${encodeURIComponent(keyword)}?_rsc=xsbs6`;
-        console.log(`🌐 搜索URL: ${searchUrl}`);
+//     console(`🌐 搜索URL: ${searchUrl}`);
         
         const response = await fetchv2(searchUrl, header);
         const data = await response.text();
@@ -392,21 +392,21 @@ async function searchResults(keyword) {
         const match = data.match(pageRegex);
         const totalPage = match ? parseInt(match[1], 10) : 1;
         
-        console.log("📊 ==========================================");
-        console.log("📊 页面解析结果");
-        console.log("📊 ==========================================");
-        console.log(`📄 正则匹配: ${match ? '成功' : '失败'}`);
-        console.log(`📄 总页数: ${totalPage}`);
-        console.log("📊 ==========================================\n");
+//     console("📊 ==========================================");
+//     console("📊 页面解析结果");
+//     console("📊 ==========================================");
+//     console(`📄 正则匹配: ${match ? '成功' : '失败'}`);
+//     console(`📄 总页数: ${totalPage}`);
+//     console("📊 ==========================================\n");
         
-        console.log("🚀 ==========================================");
-        console.log("🚀 开始API搜索流程");
-        console.log("🚀 ==========================================");
+//     console("🚀 ==========================================");
+//     console("🚀 开始API搜索流程");
+//     console("🚀 ==========================================");
 
         const pageSize = '24';
         const maxPages = 2;
         const pagesToFetch = totalPage > maxPages ? maxPages : totalPage;
-        console.log(`📄 计划获取页数: ${pagesToFetch}/${totalPage}`);
+//     console(`📄 计划获取页数: ${pagesToFetch}/${totalPage}`);
         
         const allResults = [];
 
@@ -417,13 +417,13 @@ async function searchResults(keyword) {
             const searchUrl = "https://www.hnytxj.com/api/mw-movie/anonymous/video/searchByWord?keyword=" + encodedKeyword + "&pageNum=" + pageNum + "&pageSize=" + pageSize + "&type=false";
             const sign = sha1(md5(signKey));
             
-            console.log(`🔑 第 ${currentPage} 页签名信息:`);
-            console.log(`   📍 时间戳: ${t}`);
-            console.log(`   🔐 签名Key: ${signKey}`);
-            console.log(`   🎯 签名: ${sign}`);
+//     console(`🔑 第 ${currentPage} 页签名信息:`);
+//     console(`   📍 时间戳: ${t}`);
+//     console(`   🔐 签名Key: ${signKey}`);
+//     console(`   🎯 签名: ${sign}`);
 
             try {
-                console.log(`🔍 正在获取第 ${currentPage} 页数据...`);
+//     console(`🔍 正在获取第 ${currentPage} 页数据...`);
                 const headers = {
                     'Referer': 'https://hnytxj.com/',
                     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -435,10 +435,10 @@ async function searchResults(keyword) {
                 const json_data = await response2.json();
                 const movieList = json_data.data?.result?.list;
                 
-                console.log(`📦 API响应数据长度: ${JSON.stringify(json_data).length} 字符`);
+//     console(`📦 API响应数据长度: ${JSON.stringify(json_data).length} 字符`);
 
                 if (movieList && movieList.length > 0) {
-                    console.log(`🎬 第 ${currentPage} 页找到 ${movieList.length} 部影片`);
+//     console(`🎬 第 ${currentPage} 页找到 ${movieList.length} 部影片`);
                     
                     movieList.forEach((movie, index) => {
                         const href = `https://www.hnytxj.com/detail/${movie.vodId}`;
@@ -451,10 +451,10 @@ async function searchResults(keyword) {
                             href: href?.trim() || ''
                         });
                         
-                        console.log(`   ${index + 1}. ${title}`);
+//     console(`   ${index + 1}. ${title}`);
                     });
                 } else {
-                    console.log(`❌ 第 ${currentPage} 页没有找到影片数据`);
+//     console(`❌ 第 ${currentPage} 页没有找到影片数据`);
                 }
 
                 // 请求间隔
@@ -465,10 +465,10 @@ async function searchResults(keyword) {
             }
         }
 
-        console.log("✅ ==========================================");
-        console.log("✅ 搜索完成");
-        console.log("✅ ==========================================");
-        console.log(`📊 总共找到 ${allResults.length} 部影片`);
+//     console("✅ ==========================================");
+//     console("✅ 搜索完成");
+//     console("✅ ==========================================");
+//     console(`📊 总共找到 ${allResults.length} 部影片`);
         
         return JSON.stringify(allResults);
 
@@ -487,10 +487,10 @@ async function searchResults(keyword) {
  * @returns {string} JSON格式的详情信息
  */
 async function extractDetails(url) {
-    console.log("🎯 ==========================================");
-    console.log("🎯 开始提取影片详情");
-    console.log("🎯 ==========================================");
-    console.log(`🔗 目标URL: ${url}`);
+//     console("🎯 ==========================================");
+//     console("🎯 开始提取影片详情");
+//     console("🎯 ==========================================");
+//     console(`🔗 目标URL: ${url}`);
     
     const header = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
@@ -500,10 +500,10 @@ async function extractDetails(url) {
     
     try {
         const response = await fetchv2(url, header);
-        console.log(`✅ 页面请求成功，状态码: ${response.status}`);
+//     console(`✅ 页面请求成功，状态码: ${response.status}`);
         
         const html = await response.text();
-        console.log(`📄 获取到HTML内容，长度: ${html.length} 字符`);
+//     console(`📄 获取到HTML内容，长度: ${html.length} 字符`);
 
         // 提取别名
         const aliasMatch = html.match(/别名:<\/div>([\s\S]*?)<\/div>/);
@@ -522,13 +522,13 @@ async function extractDetails(url) {
         const description = descriptionMatch ? descriptionMatch[1].trim() : "暂无描述";
         const airdate = airdateMatch ? airdateMatch[1].trim() : "N/A";
         
-        console.log("📊 ==========================================");
-        console.log("📊 详情提取结果");
-        console.log("📊 ==========================================");
-        console.log(`🏷️  别名: ${alias}`);
-        console.log(`📅 上映日期: ${airdate}`);
-        console.log(`📝 描述: ${description.substring(0, 50)}...`);
-        console.log("📊 ==========================================");
+//     console("📊 ==========================================");
+//     console("📊 详情提取结果");
+//     console("📊 ==========================================");
+//     console(`🏷️  别名: ${alias}`);
+//     console(`📅 上映日期: ${airdate}`);
+//     console(`📝 描述: ${description.substring(0, 50)}...`);
+//     console("📊 ==========================================");
 
         const details = [{
             alias,
@@ -550,10 +550,10 @@ async function extractDetails(url) {
  * @returns {string} JSON格式的剧集列表
  */
 async function extractEpisodes(url) {
-    console.log("🎯 ==========================================");
-    console.log("🎯 开始提取剧集列表");
-    console.log("🎯 ==========================================");
-    console.log(`🔗 目标URL: ${url}`);
+//     console("🎯 ==========================================");
+//     console("🎯 开始提取剧集列表");
+//     console("🎯 ==========================================");
+//     console(`🔗 目标URL: ${url}`);
 
     const header = {
         'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
@@ -563,10 +563,10 @@ async function extractEpisodes(url) {
 
     try {
         const response = await fetchv2(url, header);
-        console.log(`✅ 页面请求成功，状态码: ${response.status}`);
+//     console(`✅ 页面请求成功，状态码: ${response.status}`);
         
         const html = await response.text();
-        console.log(`📄 获取到HTML内容，长度: ${html.length} 字符`);
+//     console(`📄 获取到HTML内容，长度: ${html.length} 字符`);
 
         // 从URL提取cid
         const cidMatch = url.match(/\/(\d+)$/);
@@ -575,7 +575,7 @@ async function extractEpisodes(url) {
             return JSON.stringify([]);
         }
         const cid = cidMatch[1];
-        console.log(`✅ 提取到影片ID: ${cid}`);
+//     console(`✅ 提取到影片ID: ${cid}`);
 
         const episodes = [];
 
@@ -592,15 +592,15 @@ async function extractEpisodes(url) {
         const episodeListMatch = decodedHtml.match(episodeListRegex);
 
         if (episodeListMatch) {
-            console.log("✅ 找到剧集列表数据");
+//     console("✅ 找到剧集列表数据");
             
             try {
                 // 方法1：直接解析JSON
                 const episodeListStr = episodeListMatch[1];
-                console.log(`📦 剧集数据长度: ${episodeListStr.length} 字符`);
+//     console(`📦 剧集数据长度: ${episodeListStr.length} 字符`);
 
                 const episodeData = JSON.parse(episodeListStr);
-                console.log(`🎬 成功解析 ${episodeData.length} 个剧集`);
+//     console(`🎬 成功解析 ${episodeData.length} 个剧集`);
 
                 episodeData.forEach((item, index) => {
                     const href = `https://www.hnytxj.com/vod/play/${cid}/sid/${item.nid}`;
@@ -610,17 +610,17 @@ async function extractEpisodes(url) {
                     });
                     
                     if (index < 5) { // 只显示前5个剧集信息
-                        console.log(`   ${index + 1}. 剧集 ${item.name} -> ${href}`);
+//     console(`   ${index + 1}. 剧集 ${item.name} -> ${href}`);
                     }
                 });
                 
                 if (episodeData.length > 5) {
-                    console.log(`   ... 还有 ${episodeData.length - 5} 个剧集`);
+//     console(`   ... 还有 ${episodeData.length - 5} 个剧集`);
                 }
 
             } catch (parseError) {
-                console.log("⚠️  JSON解析失败，尝试备用方法");
-                console.log(`🔧 错误详情: ${parseError.message}`);
+//     console("⚠️  JSON解析失败，尝试备用方法");
+//     console(`🔧 错误详情: ${parseError.message}`);
 
                 // 方法2：正则匹配备用方案
                 const episodeListStr = episodeListMatch[1];
@@ -639,10 +639,10 @@ async function extractEpisodes(url) {
                     count++;
                 }
 
-                console.log(`🔧 备用方法提取到 ${count} 个剧集`);
+//     console(`🔧 备用方法提取到 ${count} 个剧集`);
             }
         } else {
-            console.log("❌ 未找到剧集列表数据，尝试备用匹配方法");
+//     console("❌ 未找到剧集列表数据，尝试备用匹配方法");
 
             // 备用方法：直接匹配JSON结构
             const jsonRegex = /"episodeList":(\[.*?\])/s;
@@ -661,7 +661,7 @@ async function extractEpisodes(url) {
                         });
                     });
                     
-                    console.log(`🔧 备用方法解析到 ${episodes.length} 个剧集`);
+//     console(`🔧 备用方法解析到 ${episodes.length} 个剧集`);
                 } catch (e) {
                     console.error("💥 解析剧集列表失败:", e.message);
                 }
@@ -670,9 +670,9 @@ async function extractEpisodes(url) {
             }
         }
 
-        console.log("✅ ==========================================");
-        console.log(`✅ 剧集提取完成: 共 ${episodes.length} 个剧集`);
-        console.log("✅ ==========================================");
+//     console("✅ ==========================================");
+//     console(`✅ 剧集提取完成: 共 ${episodes.length} 个剧集`);
+//     console("✅ ==========================================");
 
         return JSON.stringify(episodes);
         
@@ -691,10 +691,10 @@ async function extractEpisodes(url) {
  * @returns {string} JSON格式的流媒体信息
  */
 async function extractStreamUrl(url) {
-    console.log("🎯 ==========================================");
-    console.log("🎯 开始提取流媒体地址");
-    console.log("🎯 ==========================================");
-    console.log(`🔗 目标URL: ${url}`);
+//     console("🎯 ==========================================");
+//     console("🎯 开始提取流媒体地址");
+//     console("🎯 ==========================================");
+//     console(`🔗 目标URL: ${url}`);
 
     try {
         // 解析URL获取pid和nid
@@ -702,21 +702,21 @@ async function extractStreamUrl(url) {
         const pid = parts[5];
         const nid = parts[7];
         
-        console.log(`📋 解析参数: PID=${pid}, NID=${nid}`);
+//     console(`📋 解析参数: PID=${pid}, NID=${nid}`);
 
         const t = Date.now();
         const signkey = 'clientType=1&id=' + pid + '&nid=' + nid + '&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
         const md5Hash = md5(signkey);
         const sign = sha1(md5Hash);
         
-        console.log("🔑 ==========================================");
-        console.log("🔑 签名生成信息");
-        console.log("🔑 ==========================================");
-        console.log(`📅 时间戳: ${t}`);
-        console.log(`🔐 签名密钥: ${signkey}`);
-        console.log(`🔒 MD5哈希: ${md5Hash}`);
-        console.log(`🎯 SHA1签名: ${sign}`);
-        console.log("🔑 ==========================================");
+//     console("🔑 ==========================================");
+//     console("🔑 签名生成信息");
+//     console("🔑 ==========================================");
+//     console(`📅 时间戳: ${t}`);
+//     console(`🔐 签名密钥: ${signkey}`);
+//     console(`🔒 MD5哈希: ${md5Hash}`);
+//     console(`🎯 SHA1签名: ${sign}`);
+//     console("🔑 ==========================================");
 
         const headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
@@ -726,22 +726,22 @@ async function extractStreamUrl(url) {
         };
 
         const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
-        console.log(`🌐 API请求URL: ${apiUrl}`);
+//     console(`🌐 API请求URL: ${apiUrl}`);
         
         const response = await fetchv2(apiUrl, headers);
         const json_data = await response.json();
         
-        console.log("📦 ==========================================");
-        console.log("📦 API响应数据");
-        console.log("📦 ==========================================");
-        console.log(`📊 响应状态: ${json_data.code}`);
-        console.log(`📊 数据条数: ${json_data.data?.list?.length || 0}`);
-        console.log("📦 ==========================================");
+//     console("📦 ==========================================");
+//     console("📦 API响应数据");
+//     console("📦 ==========================================");
+//     console(`📊 响应状态: ${json_data.code}`);
+//     console(`📊 数据条数: ${json_data.data?.list?.length || 0}`);
+//     console("📦 ==========================================");
 
         // 检查数据有效性
         if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
             const streams = json_data.data.list.map((item, index) => {
-                console.log(`   ${index + 1}. ${item.resolutionName} -> ${item.url.substring(0, 50)}...`);
+//     console(`   ${index + 1}. ${item.resolutionName} -> ${item.url.substring(0, 50)}...`);
                 return {
                     title: item.resolutionName || '未知清晰度',
                     streamUrl: item.url,
@@ -753,10 +753,10 @@ async function extractStreamUrl(url) {
                 streams: streams,
             };
 
-            console.log("✅ ==========================================");
-            console.log("✅ 流媒体地址提取成功");
-            console.log("✅ ==========================================");
-            console.log(`📊 找到 ${streams.length} 个清晰度`);
+//     console("✅ ==========================================");
+//     console("✅ 流媒体地址提取成功");
+//     console("✅ ==========================================");
+//     console(`📊 找到 ${streams.length} 个清晰度`);
             
             return JSON.stringify(result);
 
