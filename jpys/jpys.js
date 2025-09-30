@@ -232,18 +232,18 @@ async function extractEpisodes(url) {
             }
         }
     }
-    // // 检查响应,可以临时启用：
-    //     throw new Error(`
-    //     === extractEpisodes 调试信息 ===
-    //     URL: ${url}
-    //     HTTP状态码: ${response.status}
-    //     HTML长度: ${html.length}
-    //     CID: ${cid}
-    //     episodeListMatch: ${episodeListMatch ? '✅ 找到' : '❌ 未找到'}
-    //     提取到的剧集数量: ${episodes.length}
-    //     剧集详情: ${JSON.stringify(episodes, null, 2)}
-    //     ============================
-    //     `);
+    // 检查响应,可以临时启用：
+        throw new Error(`
+        === extractEpisodes 调试信息 ===
+        URL: ${url}
+        HTTP状态码: ${response.status}
+        HTML长度: ${html.length}
+        CID: ${cid}
+        episodeListMatch: ${episodeListMatch ? '✅ 找到' : '❌ 未找到'}
+        提取到的剧集数量: ${episodes.length}
+        剧集详情: ${JSON.stringify(episodes, null, 2)}
+        ============================
+        `);
 
     // console.log(`✅ 成功提取 ${episodes.length} 个剧集`);
     // console.table(episodes);
