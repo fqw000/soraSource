@@ -7,41 +7,16 @@ async function searchResults(keyword) {
     };
     const searchUrl = `https://hnytxj.com/vod/search/${encodeURIComponent(keyword)}?_rsc=xsbs6`;
     
-    let finalResult = [];
+    // 测试 fetchv2
+    const response = await fetchv2(searchUrl, header).catch(error => {
+        throw new Error(`🚨 FETCHV2_ERROR: ${error.message} | 值： ${response}`);
+    });
     
-    try {
-        const response = await fetchv2(searchUrl, header);
-        const html = await response.json();
-        
-        finalResult = [{ title: "测试数据", image: "", href: "" }];
-        
-        // 成功时抛出调试信息
-        throw new Error(`=== 搜索成功调试信息 ===
-        关键词: ${keyword}
-        URL: ${searchUrl}
-        状态码: ${response.status}
-        数据长度: ${html.length}
-        返回结果数量: ${finalResult.length}
-        返回值：${html}
-        ============================`);
-        
-    } catch (err) {
-        finalResult = [{ 
-            title: "错误: " + err.message, 
-            image: "https://i.ibb.co/Y4b38sTG/Search-has-no-images.png", 
-            href: "javascript:void(0)" 
-        }];
-        
-        // 错误时也抛出调试信息
-        throw new Error(`=== 搜索错误调试信息 ===
-        关键词: ${keyword}
-        URL: ${searchUrl}
-        html: ${html}
-        最终结果: ${JSON.stringify(finalResult)}
-        原始错误: ${err.message}
-        ============================`);
-            }
+    // 测试 response.json()
+    const html = await response.json().catch(error => {
+        throw new Error(`🚨 JSON_PARSE_ERROR: ${error.message} | Status: ${response.status}`| 值： ${html});
+    });
     
-    // 这行不会执行，因为前面一定会throw
-    return JSON.stringify(finalResult);
+    // 成功
+    throw new Error(`✅ SUCCESS: 数据长度 ${html.length}`);
 }
