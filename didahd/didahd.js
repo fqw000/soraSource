@@ -82,7 +82,7 @@ async function searchResults(keyword) {
         return JSON.stringify([{
             title: "搜索出错: " + err.message,
             image: "https://i.ibb.co/Y4b38sTG/Search-has-no-images.png",
-            href: ‘’
+            href: ''
         }], null, 2);
     }
 }
