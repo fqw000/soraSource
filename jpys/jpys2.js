@@ -7,17 +7,12 @@ async function searchResults(keyword) {
     };
     const searchUrl = `https://hnytxj.com/vod/search/${encodeURIComponent(keyword)}?_rsc=xsbs6`;
     
-    // 第一步：只测试 fetchv2，查看response
     const response = await fetchv2(searchUrl, header);
-    throw new Error(`🔍 第一步 - 响应对象详情:
-URL: ${searchUrl}
-状态码: ${response.status}
-OK状态: ${response.ok}
-是否有Body: ${!!response.body}
-响应对象Keys: ${Object.keys(response).join(', ')}
-响应体：${JSON.stringify(response)}
-============================`);
+    const data = await response.json();
+    const pageRegex = /"result":.*"totalPage":(\d+)/
+    const match = data.match(pageRegex);
+    throw new Error(`--------------
+        data: ${data}
+        match: ${match}
+    ---------------`);
 }
-
-// 单独运行这个来测试 response
-// searchResults("测试").then(console.log).catch(console.error);
