@@ -317,8 +317,14 @@ async function searchResults(keyword) {
 		const pageRegex = /"result":.*"totalPage":(\d+)/
 		const match = data.match(pageRegex);
 		const totalPage = match ? parseInt(match[1], 10) : 1;
-		console.log('Total Pages:', totalPage);
-
+		console.log(`Total Pages: ${totalPage}`);
+		
+		// throw new Error(`--------------
+	 //        data: ${data}
+	 //        match: ${match}
+		// 	totalPage: ${totalPage}
+	 //   	 ---------------`);
+		
 		console.log('以下开始使用api获取搜索结果');
 
 		const pageSize = '24';   // 定义每页的数量，默认是12，按需调整
@@ -338,7 +344,7 @@ async function searchResults(keyword) {
 
 			const searchUrl = "https://www.hnytxj.com/api/mw-movie/anonymous/video/searchByWord?keyword=" + encodedKeyword + "&pageNum=" + pageNum + "&pageSize=" + pageSize + "&type=false";
 			const sign = sha1(md5(signKey));
-			console.log("sign:", sign, "t:", t, "signKey:", signKey);
+			console.log(`sign: ${sign} | t: ${t} | signKey:  ${signKey}`);
 			console.log(`🔍 正在获取第 ${currentPage} 页数据...`);
 
 			const debuggerInfo = {
