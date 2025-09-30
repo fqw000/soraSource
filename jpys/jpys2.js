@@ -336,7 +336,7 @@ async function searchResults(keyword) {
 		// 	totalPage: ${totalPage}
 	 //   	 ---------------`);
 		
-		/·console.log('以下开始使用api获取搜索结果');
+		// console.log('以下开始使用api获取搜索结果');
 
 		const pageSize = '24';   // 定义每页的数量，默认是12，按需调整
 		const maxPages = 3;      // 最大获取页数
