@@ -40,7 +40,7 @@ async function searchResults(keyword) {
             });
         }
 
-        console.table(results);
+        // console.table(results);
         return JSON.stringify(results);
     } catch (err) {
         console.error("Search error:", err);
