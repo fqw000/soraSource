@@ -13,23 +13,26 @@ async function searchResults(keyword) {
         const html = await response.json();
         console.log("📄 获取到HTML内容，长度:", html.length, "字符");
         
-        // 使用 JSON.stringify 的版本
-        const debugInfo = {
-            URL: searchUrl,
-            HTTP状态码: response.status,
-            HTML长度: html.length,
-            响应详情: html
-        };
-        
-        throw new Error(`=== fetchv2 调试信息 ===\n${JSON.stringify(debugInfo, null, 2)}\n============================`);
-        
+        // 先处理数据，构建结果
         const results = [{
             title: "NULL",
             image: "",
             href: ""
         }];
 
-        return JSON.stringify(results);
+        // 在返回前抛出调试信息
+        const debugInfo = {
+            URL: searchUrl,
+            HTTP状态码: response.status,
+            HTML长度: html.length,
+            响应详情: html,
+            处理结果: results
+        };
+        
+        throw new Error(`=== fetchv2 调试信息 ===\n${JSON.stringify(debugInfo, null, 2)}\n============================`);
+        
+        // return JSON.stringify(results); // 这行不会执行
+        
     } catch (err) {
         console.error("Search error:", err);
         return JSON.stringify([{
