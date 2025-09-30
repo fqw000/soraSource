@@ -317,7 +317,18 @@ async function searchResults(keyword) {
 		const pageRegex = /"result":.*"totalPage":(\d+)/
 		const match = data.match(pageRegex);
 		const totalPage = match ? parseInt(match[1], 10) : 1;
-		console.log(`Total Pages: ${totalPage}`);
+		var debuggerInfo = {
+			//data: data,
+			match: match,
+			totalPage: totalPage
+		};
+		console.log(`
+		🎯 正则匹配调试信息
+		===================
+		${JSON.stringify(debuggerInfo, null, 2)}
+		===================
+		`);
+		console.log(`Total Pages: ${totalPage} \n`);
 		
 		// throw new Error(`--------------
 	 //        data: ${data}
@@ -329,72 +340,59 @@ async function searchResults(keyword) {
 
 		const pageSize = '24';   // 定义每页的数量，默认是12，按需调整
 		const maxPages = 2;      // 最大获取页数
-
-		// 确定需要获取的页数
-		const pagesToFetch = totalPage > maxPages ? maxPages : totalPage;
+		const pagesToFetch = totalPage > maxPages ? maxPages : totalPage;	// 确定需要获取的页数
 		console.log(`📄 需要获取 ${pagesToFetch} 页数据`);
-
+		
 		const allResults = [];
 
 		for (let currentPage = 1; currentPage <= pagesToFetch; currentPage++) {
 			const pageNum = currentPage.toString();
 			const t = Date.now();
-
 			const signKey = 'keyword=' + keyword + '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&type=false&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
-
 			const searchUrl = "https://www.hnytxj.com/api/mw-movie/anonymous/video/searchByWord?keyword=" + encodedKeyword + "&pageNum=" + pageNum + "&pageSize=" + pageSize + "&type=false";
 			const sign = sha1(md5(signKey));
 			console.log(`sign: ${sign} | t: ${t} | signKey:  ${signKey}`);
-			console.log(`🔍 正在获取第 ${currentPage} 页数据...`);
 
-			const debuggerInfo = {
-                sign: sign,
-                t: t,
-                signKey: signKey,
-                searchUrl: searchUrl
-            }
-            throw new Error(JSON.stringify(debuggerInfo, null, 2));
+			try {
+				console.log(`🔍 正在获取第 ${currentPage} 页数据...`);
+				const response2 = await fetchv2(searchUrl, {
+					headers: {
+						Referer: 'https://hnytxj.com/',
+						'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+						sign: sign,
+						t: t
+					}
+				});
+				const json_data = await response2.json();
+				const movieList = json_data.data?.result?.list;
+				console.log(`json_data: ${json_data}`);
 
-		// 	try {
-		// 		const response2 = await fetchv2(searchUrl, {
-		// 			headers: {
-		// 				Referer: 'https://hnytxj.com/',
-		// 				'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-		// 				sign: sign,
-		// 				t: t
-		// 			}
-		// 		});
+				if (movieList && movieList.length > 0) {
+					console.log(`🎬 第 ${currentPage} 页找到 ${movieList.length} 部影片`);
 
-		// 		const json_data = await response2.json();
-		// 		const movieList = json_data.data?.result?.list;
-		// 		console.log("json_data:", json_data);
+					// 处理每部影片
+					movieList.forEach(movie => {
+						const href = `https://www.hnytxj.com/detail/${movie.vodId}`;
+						const image = movie.vodPic;
+						const title = movie.vodName;
 
-		// 		if (movieList && movieList.length > 0) {
-		// 			console.log(`🎬 第 ${currentPage} 页找到 ${movieList.length} 部影片`);
+						allResults.push({
+							title: title?.trim() || '',
+							image: image?.trim() || '',
+							href: href?.trim() || ''
+						});
+					});
 
-		// 			// 处理每部影片
-		// 			movieList.forEach(movie => {
-		// 				const href = `https://www.hnytxj.com/detail/${movie.vodId}`;
-		// 				const image = movie.vodPic;
-		// 				const title = movie.vodName;
+				} else {
+					console.log(`❌ 第 ${currentPage} 页没有找到影片数据`);
+				}
 
-		// 				allResults.push({
-		// 					title: title?.trim() || '',
-		// 					image: image?.trim() || '',
-		// 					href: href?.trim() || ''
-		// 				});
-		// 			});
+				// 添加延迟避免请求过快
+				await new Promise(resolve => setTimeout(resolve, 100));
 
-		// 		} else {
-		// 			console.log(`❌ 第 ${currentPage} 页没有找到影片数据`);
-		// 		}
-
-		// 		// 添加延迟避免请求过快
-		// 		await new Promise(resolve => setTimeout(resolve, 100));
-
-		// 	} catch (error) {
-		// 		console.error(`❌ 获取第 ${currentPage} 页数据时出错:`, error);
-		// 	}
+			} catch (error) {
+				console.error(`❌ 获取第 ${currentPage} 页数据时出错:`, error);
+			}
 		}
 
 		return JSON.stringify(allResults);
