@@ -78,7 +78,7 @@ async function searchResults(keyword) {
         return JSON.stringify(uniqueResults, null, 2);
 
     } catch(err) {
-        console.error(“💥 搜索过程发生错误:”, err.message);
+        console.error("💥 搜索过程发生错误:," + err.message);
         return JSON.stringify([{
             title: "搜索出错: " + err.message,
             image: "https://i.ibb.co/Y4b38sTG/Search-has-no-images.png",
