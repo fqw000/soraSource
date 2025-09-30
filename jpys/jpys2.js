@@ -15,7 +15,7 @@ URL: ${searchUrl}
 OK状态: ${response.ok}
 是否有Body: ${!!response.body}
 响应对象Keys: ${Object.keys(response).join(', ')}
-响应体：${response}
+响应体：${JSON.stringify(response)}
 ============================`);
 }
 
