@@ -322,12 +322,12 @@ async function searchResults(keyword) {
 			match: match,
 			totalPage: totalPage
 		};
-		console.log(`
-		🎯 正则匹配调试信息
-		===================
-		${JSON.stringify(debuggerInfo, null, 2)}
-		===================
-		`);
+		//console.log(`
+		//🎯 正则匹配调试信息
+		// ===================
+		// ${JSON.stringify(debuggerInfo, null, 2)}
+		// ===================
+		// `);
 		console.log(`Total Pages: ${totalPage} \n`);
 		
 		// throw new Error(`--------------
@@ -336,10 +336,10 @@ async function searchResults(keyword) {
 		// 	totalPage: ${totalPage}
 	 //   	 ---------------`);
 		
-		console.log('以下开始使用api获取搜索结果');
+		/·console.log('以下开始使用api获取搜索结果');
 
 		const pageSize = '24';   // 定义每页的数量，默认是12，按需调整
-		const maxPages = 2;      // 最大获取页数
+		const maxPages = 3;      // 最大获取页数
 		const pagesToFetch = totalPage > maxPages ? maxPages : totalPage;	// 确定需要获取的页数
 		console.log(`📄 需要获取 ${pagesToFetch} 页数据`);
 		
@@ -351,7 +351,7 @@ async function searchResults(keyword) {
 			const signKey = 'keyword=' + keyword + '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&type=false&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
 			const searchUrl = "https://www.hnytxj.com/api/mw-movie/anonymous/video/searchByWord?keyword=" + encodedKeyword + "&pageNum=" + pageNum + "&pageSize=" + pageSize + "&type=false";
 			const sign = sha1(md5(signKey));
-			console.log(`sign: ${sign} | t: ${t} | signKey:  ${signKey}`);
+			// console.log(`sign: ${sign} | t: ${t} | signKey:  ${signKey}`);
 
 			try {
 				console.log(`🔍 正在获取第 ${currentPage} 页数据...`);
@@ -364,7 +364,7 @@ async function searchResults(keyword) {
 				const response2 = await fetchv2(searchUrl, headers);
 				const json_data = await response2.json();
 				const movieList = json_data.data?.result?.list;
-				console.log(`json_data: ${JSON.stringify(json_data, null, 2)}`);
+				// console.log(`json_data: ${JSON.stringify(json_data, null, 2)}`);
 
 				if (movieList && movieList.length > 0) {
 					console.log(`🎬 第 ${currentPage} 页找到 ${movieList.length} 部影片`);
@@ -483,7 +483,7 @@ async function extractEpisodes(url) {
         try {
             // 方法1：直接解析JSON
             const episodeListStr = episodeListMatch[1];
-            console.log("提取到的JSON字符串:", episodeListStr.substring(0, 100) + "...");
+            // console.log("提取到的JSON字符串:", episodeListStr.substring(0, 100) + "...");
 
             const episodeData = JSON.parse(episodeListStr);
             console.log(`✅ 成功解析 ${episodeData.length} 个剧集项`);
@@ -567,10 +567,6 @@ async function extractStreamUrl(url) {
         const signkey = 'clientType=1&id=' + pid + '&nid=' + nid + '&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
         const md5Hash = md5(signkey);  // 替换 crypto.createHash('md5').update(signkey).digest('hex')
         const sign = sha1(md5Hash);    // 替换 crypto.createHash('sha1').update(md5Hash).digest('hex')
-
-        // console.log('MD5 Hash:', JSON.stringify({ md5Hash }));
-        // console.log('SHA1 Sign:', JSON.stringify({ sign }));
-
 
         const headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
