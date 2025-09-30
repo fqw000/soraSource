@@ -12,10 +12,10 @@ async function searchResults(keyword) {
     throw new Error(`🔍 第一步 - 响应对象详情:
 URL: ${searchUrl}
 状态码: ${response.status}
-响应头: ${JSON.stringify(Object.fromEntries(response.headers.entries()), null, 2)}
 OK状态: ${response.ok}
 是否有Body: ${!!response.body}
 响应对象Keys: ${Object.keys(response).join(', ')}
+响应体：${response}
 ============================`);
 }
 
