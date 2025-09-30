@@ -211,13 +211,14 @@ async function extractEpisodes(url) {
 
     try {
         const response = await fetchv2(url, header);
-        if (!response.ok) throw new Error(`HTTP错误! 状态码: ${response.status}`);
-
         const html = await response.text();
 
+        console.log(`✅ 页面请求成功，状态码: ${response.status} | 页面长度${html.length}字符`);
+        
         // 提取 playlist0 中的剧集列表区域
         const playlistRegex = /<div id="playlist0"[\s\S]*?<ul class="[^"]*sort-list[^"]*"[\s\S]*?<\/ul>/;
         const playlistMatch = html.match(playlistRegex);
+        console.log(`JSON.stringify(playlistMatch)`);
 
         if (!playlistMatch) {
             console.log("❌ 未找到 playlist0 区域");
