@@ -8,11 +8,14 @@ async function searchResults(keyword) {
 		const headers = {
 		    'RSC': '1'
         };
-        const response = await fetch(url, headers);
-
+        const response = await fetchv2(url, headers);
+		console.log("获取到response", response.json());
+		
         if (!response.ok) {
             throw new Error(`HTTP error! status: ${response.status}`);
         }
+		console.log((`response status: ${response.status}`));
+		
         	// 根据实际返回内容类型选择解析方式
         const contentType = response.headers.get('content-type');
         let data;
