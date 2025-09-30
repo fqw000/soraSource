@@ -334,11 +334,11 @@ async function searchResults(keyword) {
 			const pageNum = currentPage.toString();
 			const t = Date.now();
 
-			const singKey = 'keyword=' + keyword + '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&type=false&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
+			const signKey = 'keyword=' + keyword + '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&type=false&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
 
 			const searchUrl = "https://www.hnytxj.com/api/mw-movie/anonymous/video/searchByWord?keyword=" + encodedKeyword + "&pageNum=" + pageNum + "&pageSize=" + pageSize + "&type=false";
-			const sign = sha1(md5(singKey));
-			console.log("sign:", sign, "t:", t, "singKey:", singKey);
+			const sign = sha1(md5(signKey));
+			console.log("sign:", sign, "t:", t, "signKey:", signKey);
 			console.log(`🔍 正在获取第 ${currentPage} 页数据...`);
 
 			const debuggerInfo = {
