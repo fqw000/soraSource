@@ -341,6 +341,15 @@ async function searchResults(keyword) {
 			console.log("sign:", sign, "t:", t, "singKey:", singKey);
 			console.log(`🔍 正在获取第 ${currentPage} 页数据...`);
 
+			const debuggerInfo = {
+                sign: sign,
+                t: t,
+                signKey: signKey,
+                searchUrl: searchUrl
+            }
+            throw new Error(JSON.stringify(debuggerInfo), null, 2);
+
+
 			try {
 				const response2 = await fetchv2(searchUrl, {
 					headers: {
