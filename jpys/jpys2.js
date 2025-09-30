@@ -365,7 +365,7 @@ async function searchResults(keyword) {
 				});
 				const json_data = await response2.json();
 				const movieList = json_data.data?.result?.list;
-				console.log(`json_data: ${json_data}`);
+				console.log(`json_data: ${JSON.stringify(json_data, null, 2)}`);
 
 				if (movieList && movieList.length > 0) {
 					console.log(`🎬 第 ${currentPage} 页找到 ${movieList.length} 部影片`);
