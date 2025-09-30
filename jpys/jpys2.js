@@ -1,3 +1,4 @@
+// sora 不支持调用crypto模块，该用本地函数实现md5和sha1功能
 // MD5哈希函数
 function md5(string) {
 	function rotateLeft(lValue, iShiftBits) {
@@ -302,136 +303,120 @@ function utf8Encode(string) {
 
 async function searchResults(keyword) {
 
-	try {
 
-		// 将关键字进行URL编码
-		const encodedKeyword = encodeURIComponent(keyword);
-
+    try {
 		// 获取搜索结果总页数
+    	const encodedKeyword = encodeURIComponent(keyword);
 		const headers = {
-			'RSC': '1'
-		};
-		const response = await fetchv2(`https://hnytxj.com/vod/search/${encodedKeyword}?_rsc=xsbs6`, { headers });
+		'RSC': '1'
+        };
+        const response = await fetchv2(`https://hnytxj.com/vod/search/${encodedKeyword}?_rsc=xsbs6`, { headers });
 
-		if (!response.ok) {
-			throw new Error(`HTTP error! status: ${response.status}`);
-		}
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
 
-		// 根据实际返回内容类型选择解析方式
-		const contentType = response.headers.get('content-type');
-		let data;
+        	// 根据实际返回内容类型选择解析方式
+        const contentType = response.headers.get('content-type');
+        let data;
 
-		if (contentType && contentType.includes('application/json')) {
-			data = await response.json();
-		} else {
-			data = await response.text();
-		}
+        if (contentType && contentType.includes('application/json')) {
+            data = await response.json();
+        } else {
+            data = await response.text();
+        }
 
-		throw new error(`
-			状态: ${response.status} ${response.statusText}
-			URL: ${response.url}
-			完整响应: ${data}
-			`);
-		const pageRegex = /"result":.*"totalPage":(\d+)/
-		const match = data.match(pageRegex);
-		const totalPage = match ? parseInt(match[1], 10) : 1;
-		console.log('Total Pages:', totalPage);
+        const pageRegex = /"result":.*"totalPage":(\d+)/
+        const match = data.match(pageRegex);
+        const totalPage = match ? parseInt(match[1], 10) : 1;
+        console.log('Total Pages:', totalPage);
 
-		// ---- 以下为使用api获取数据
+        // ---- 以下为使用api获取数据
 
-		// 如果totalPage>3,则只取前3页，pageNum=1,2,3,执行循环获取响应，并将每次循环的结果合并然后作为函数的返回值，否则只取totalPage页
-		// 目前只实现了获取第一页的功能，后续可以根据需要实现循环获取多页数据
+        const pageSize = '12';   // 定义每页的数量，默认是12，按需调整
+        const maxPages = 2;      // 最大获取页数
 
-		const pageSize = '24';   // 定义每页的数量，默认是12，按需调整
-		const maxPages = 2;      // 最大获取页数
+        // 确定需要获取的页数
+        const pagesToFetch = totalPage > maxPages ? maxPages : totalPage;
+        console.log(`📄 需要获取 ${pagesToFetch} 页数据`);
 
-		// 确定需要获取的页数
-		const pagesToFetch = totalPage > maxPages ? maxPages : totalPage;
-		console.log(`📄 需要获取 ${pagesToFetch} 页数据`);
+        const allResults = [];
 
-		const allResults = [];
+        for (let currentPage = 1; currentPage <= pagesToFetch; currentPage++) {
+            const pageNum = currentPage.toString();
+            const t = Date.now();
 
-		for (let currentPage = 1; currentPage <= pagesToFetch; currentPage++) {
-			const pageNum = currentPage.toString();
-			const t = Date.now();
+            const singKey = 'keyword=' + keyword + '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&type=false&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
 
-			const singKey = 'keyword=' + keyword + '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&type=false&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
+            const searchUrl = "https://www.hnytxj.com/api/mw-movie/anonymous/video/searchByWord?keyword=" + encodedKeyword + "&pageNum=" + pageNum + "&pageSize=" + pageSize + "&type=false";
+            const sign = sha1(md5(singKey));
+            console.log("sign:", sign, "t:", t, "singKey:", singKey);
+            console.log(`🔍 正在获取第 ${currentPage} 页数据...`);
 
-			const searchUrl = "https://www.hnytxj.com/api/mw-movie/anonymous/video/searchByWord?keyword=" + encodedKeyword + "&pageNum=" + pageNum + "&pageSize=" + pageSize + "&type=false";
-			const sign = sha1(md5(singKey));
-			console.log("sign:", sign, "t:", t, "singKey:", singKey);
-			console.log(`🔍 正在获取第 ${currentPage} 页数据...`);
+            try {
+                const response2 = await fetchv2(searchUrl, {
+                    headers: {
+                        Referer: 'https://hnytxj.com/',
+                        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
+                        sign: sign,
+                        t: t
+                    }
+                });
 
-			try {
-				const response2 = await fetchv2(searchUrl, {
-					headers: {
-						Referer: 'https://hnytxj.com/',
-						'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-						sign: sign,
-						t: t
-					}
-				});
+                const json_data = await response2.json();
+                const movieList = json_data.data?.result?.list;
+                console.log("json_data:", json_data);
 
-				const json_data = await response2.json();
-				const movieList = json_data.data?.result?.list;
-				console.log("json_data:", json_data);
+                if (movieList && movieList.length > 0) {
+                    console.log(`🎬 第 ${currentPage} 页找到 ${movieList.length} 部影片`);
 
-				if (movieList && movieList.length > 0) {
-					console.log(`🎬 第 ${currentPage} 页找到 ${movieList.length} 部影片`);
+                    // 处理每部影片
+                    movieList.forEach(movie => {
+                        const href = `https://www.hnytxj.com/detail/${movie.vodId}`;
+                        const image = movie.vodPic;
+                        const title = movie.vodName;
 
-					// 处理每部影片
-					movieList.forEach(movie => {
-						const href = `https://www.hnytxj.com/detail/${movie.vodId}`;
-						const image = movie.vodPic;
-						const title = movie.vodName;
+                        allResults.push({
+                            title: title?.trim() || '',
+                            image: image?.trim() || '',
+                            href: href?.trim() || ''
+                        });
+                    });
 
-						allResults.push({
-							title: title?.trim() || '',
-							image: image?.trim() || '',
-							href: href?.trim() || ''
-						});
-					});
+                } else {
+                    console.log(`❌ 第 ${currentPage} 页没有找到影片数据`);
+                }
 
-				} else {
-					console.log(`❌ 第 ${currentPage} 页没有找到影片数据`);
-				}
+                // 添加延迟避免请求过快
+                // await new Promise(resolve => setTimeout(resolve, 100));
 
-				// 添加延迟避免请求过快
-				await new Promise(resolve => setTimeout(resolve, 100));
+            } catch (error) {
+                console.error(`❌ 获取第 ${currentPage} 页数据时出错:`, error);
+            }
+        }
 
-			} catch (error) {
-				console.error(`❌ 获取第 ${currentPage} 页数据时出错:`, error);
-			}
-		}
-
-		return JSON.stringify(allResults);
-
-	} catch (error) {
-		console.error(`❌ 搜索失败:`, error);
-		return JSON.stringify([]);
-	}
+        return allResults;
+    } catch (error) {
+        console.error(`❌ 搜索失败:`, error);
+        return [];
+    }
 }
-
-
 async function extractDetails(url) {
-
-	return JSON.stringify({});
+	return JSON.stringfy([]);
 }
 
 async function extractEpisodes(url) {
 
-	return JSON.stringify([]);
+    return JSON.stringify([]);
 }
 
 async function extractStreamUrl(url) {
-
-	return JSON.stringify([]);
-
+	return JSON.stringfy([]);
 }
 
-searchResults("战").then(console.log);
+// searchResults("战").then(console.log);
 // extractDetails("https://www.hnytxj.com/detail/107070").then(console.log);
-// extractEpisodes("https://www.hnytxj.com/detail/107070").then(console.log);
+ // extractEpisodes("https://www.hnytxj.com/detail/107070").then(console.log);
 // extractStreamUrl("https://www.hnytxj.com/vod/play/107070/sid/554915").then(console.log);
 // extractStreamUrl("https://www.hnytxj.com/vod/play/139196/sid/1231041")
 //   .then(streamUrl => {
