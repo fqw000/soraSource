@@ -1,31 +1,28 @@
 
 async function searchResults(keyword) {
-
+	const encodedKeyword = encodeURIComponent(keyword);
+	const searchUrl = `https://hnytxj.com/vod/search/${encodedKeyword}?_rsc=xsbs6`;
+	const headers = {
+		'RSC': '1'
+	};
     try {
 		// 获取搜索结果总页数
-        const encodedKeyword = encodeURIComponent(keyword);
-        const searchUrl = `https://hnytxj.com/vod/search/${encodedKeyword}?_rsc=xsbs6`;
-		const headers = {
-		    'RSC': '1'
-        };
         const response = await fetchv2(url, headers);
-		console.log("获取到response", response.json());
+		const json_data = await response.json();
+		console.log(`response status: ${response.status}`);
+		console.log("获取到响应", response);
+		console.log("获取到data", json_data);
 		
-        if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-        }
-		console.log((`response status: ${response.status}`));
+		// 检查响应,可以临时启用：
+			throw new Error(`API响应详情: ${JSON.stringify({
+			    status: '成功',
+			    code: json_data.code,
+				searchUrl: searchUrl,
+			    fullData: json_data // 完整数据，但可能很长
+				
+			}, null, 2)}`);
+
 		
-        	// 根据实际返回内容类型选择解析方式
-        const contentType = response.headers.get('content-type');
-        let data;
-        if (contentType && contentType.includes('application/json')) {
-            data = await response.json();
-        } else {
-            data = await response.text();
-        }
-		console.log(`返回内容： ${data}, --- :${JSON.stringify(data)}`);
-		throw new Error(`返回内容：${data} `);
 		return JSON.stringify([{ title: 'NULL', image: '', href: '' }]);
     } catch (error) {
         console.error(`❌ 搜索失败:`, error);
