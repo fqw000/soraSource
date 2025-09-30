@@ -14,13 +14,13 @@ async function searchResults(keyword) {
         console.log("📄 获取到HTML内容，长度:", html.length, "字符");
         
         throw new Error(`
-            === fetchv2 调试信息 ===
+            === fetchv2 调试信息 ===${JSON.stringfy({
             URL: ${searchUrl}
             HTTP状态码: ${response.status}
             HTML长度: ${html.length}
             响应详情: ${JSON.stringify(html, null, 2)}
             ============================
-            `);
+            }, null, 2)}`);
         
         const results = [];
         results.push({
