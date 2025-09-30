@@ -355,14 +355,13 @@ async function searchResults(keyword) {
 
 			try {
 				console.log(`🔍 正在获取第 ${currentPage} 页数据...`);
-				const response2 = await fetchv2(searchUrl, {
-					headers: {
-						Referer: 'https://hnytxj.com/',
+				const headers = {
+						'Referer': 'https://hnytxj.com/',
 						'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
-						sign: sign,
-						t: t
-					}
-				});
+						'sign': sign,
+						't': t
+				};
+				const response2 = await fetchv2(searchUrl, headers);
 				const json_data = await response2.json();
 				const movieList = json_data.data?.result?.list;
 				console.log(`json_data: ${JSON.stringify(json_data, null, 2)}`);
