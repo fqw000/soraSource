@@ -6,39 +6,40 @@ async function searchResults(keyword) {
         'DNT': '1'
     };
     const searchUrl = `https://hnytxj.com/vod/search/${encodeURIComponent(keyword)}?_rsc=xsbs6`;
+    
+    let finalResult = [];
+    
     try {
-        console.log("🔍 开始搜索硬盘，目标URL:", searchUrl);
         const response = await fetchv2(searchUrl, header);
-        console.log("✅ 页面请求成功，状态码:", response.status);
         const html = await response.json();
-        console.log("📄 获取到HTML内容，长度:", html.length, "字符");
         
-        // 先处理数据，构建结果
-        const results = [{
-            title: "NULL",
-            image: "",
-            href: ""
-        }];
-
-        // 在返回前抛出调试信息
-        const debugInfo = {
-            URL: searchUrl,
-            HTTP状态码: response.status,
-            HTML长度: html.length,
-            响应详情: html,
-            处理结果: results
-        };
+        finalResult = [{ title: "测试数据", image: "", href: "" }];
         
-        throw new Error(`=== fetchv2 调试信息 ===\n${JSON.stringify(debugInfo, null, 2)}\n============================`);
-        
-        // return JSON.stringify(results); // 这行不会执行
+        // 成功时抛出调试信息
+        throw new Error(`=== 搜索成功调试信息 ===
+关键词: ${keyword}
+URL: ${searchUrl}
+状态码: ${response.status}
+数据长度: ${html.length}
+返回结果数量: ${finalResult.length}
+============================`);
         
     } catch (err) {
-        console.error("Search error:", err);
-        return JSON.stringify([{
-            title: "搜索出错: " + err.message,
-            image: "https://i.ibb.co/Y4b38sTG/Search-has-no-images.png",
-            href: "javascript:void(0)"
-        }]);
+        finalResult = [{ 
+            title: "错误: " + err.message, 
+            image: "https://i.ibb.co/Y4b38sTG/Search-has-no-images.png", 
+            href: "javascript:void(0)" 
+        }];
+        
+        // 错误时也抛出调试信息
+        throw new Error(`=== 搜索错误调试信息 ===
+关键词: ${keyword}
+URL: ${searchUrl}
+最终结果: ${JSON.stringify(finalResult)}
+原始错误: ${err.message}
+============================`);
     }
+    
+    // 这行不会执行，因为前面一定会throw
+    return JSON.stringify(finalResult);
 }
