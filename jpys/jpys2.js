@@ -17,12 +17,13 @@ async function searchResults(keyword) {
         
         // 成功时抛出调试信息
         throw new Error(`=== 搜索成功调试信息 ===
-关键词: ${keyword}
-URL: ${searchUrl}
-状态码: ${response.status}
-数据长度: ${html.length}
-返回结果数量: ${finalResult.length}
-============================`);
+        关键词: ${keyword}
+        URL: ${searchUrl}
+        状态码: ${response.status}
+        数据长度: ${html.length}
+        返回结果数量: ${finalResult.length}
+        返回值：${html}
+        ============================`);
         
     } catch (err) {
         finalResult = [{ 
@@ -33,12 +34,13 @@ URL: ${searchUrl}
         
         // 错误时也抛出调试信息
         throw new Error(`=== 搜索错误调试信息 ===
-关键词: ${keyword}
-URL: ${searchUrl}
-最终结果: ${JSON.stringify(finalResult)}
-原始错误: ${err.message}
-============================`);
-    }
+        关键词: ${keyword}
+        URL: ${searchUrl}
+        html: ${html}
+        最终结果: ${JSON.stringify(finalResult)}
+        原始错误: ${err.message}
+        ============================`);
+            }
     
     // 这行不会执行，因为前面一定会throw
     return JSON.stringify(finalResult);
