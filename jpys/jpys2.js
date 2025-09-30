@@ -347,7 +347,7 @@ async function searchResults(keyword) {
                 signKey: signKey,
                 searchUrl: searchUrl
             }
-            throw new Error(JSON.stringify(debuggerInfo), null, 2);
+            throw new Error(JSON.stringify(debuggerInfo, null, 2));
 
 
 			try {
