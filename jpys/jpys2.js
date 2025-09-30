@@ -402,19 +402,224 @@ async function searchResults(keyword) {
 	}
 }
 
-
 async function extractDetails(url) {
+    const header = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'zh-CN,zh;q=0.9',
+        // 'Referer': searchUrl  // ✅ 使用搜索页URL
+    };
+    console.log(`🔍 开始提取详情，目标URL: ${url}`);
+    const response = await fetchv2(url, header);
+    console.log(`✅ 页面请求成功，状态码: ${response.status}`);
+    const html = await response.text();
+    console.log(`📄 获取到HTML内容，长度: ${html.length}字符`);
 
-	return JSON.stringify({});
+    const aliasMatch = html.match(/别名:<\/div>([\s\S]*?)<\/div>/);
+    let alias = "N/A";
+    if (aliasMatch) {
+        alias = aliasMatch[1]
+            .replace(/<a href="\/vod\/search\/[^"]+">([^<]+)<\/a>/g, '$1 || ')
+            .replace(/\s+/g, ' ')
+            .trim();
+    }
+
+    const descriptionMatch = html.match(/<div class="jiantou"><\/div><\/label>\s*([\s\S]*?)<\/div>/);
+    const airdateMatch = html.match(/<div class="item-top">(\d+-\d+-\d+)<\/div>/);
+
+    const description = descriptionMatch ? descriptionMatch[1].trim() : "No description available.";
+    const airdate = airdateMatch ? airdateMatch[1].trim() : "N/A";
+
+    const details = [{
+        alias,
+        description,
+        airdate
+    }];
+
+    // console.log(JSON.stringify(details));
+    return JSON.stringify(details);
 }
 
 async function extractEpisodes(url) {
+    console.log("🔍 开始提取剧集，目标URL:", url);
 
-	return JSON.stringify([]);
+    const header = {
+        'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8',
+        'Accept-Language': 'zh-CN,zh;q=0.9'
+    }
+
+    const response = await fetchv2(url, header);
+    console.log("✅ 页面请求成功，状态码:", response.status);
+    const html = await response.text();
+    console.log("📄 获取到HTML的长度:", html.length, "字符");
+
+    // 从URL提取cid
+    const cidMatch = url.match(/\/(\d+)$/);
+    if (!cidMatch) {
+        console.error("❌ 无法从URL中提取cid");
+        return JSON.stringify([]);
+    }
+    const cid = cidMatch[1];
+    console.log("✅ 提取到cid:", cid);
+
+    const episodes = [];
+
+    // 解码HTML实体和转义字符
+    const decodedHtml = html
+        .replace(/\\"/g, '"')
+        .replace(/\\n/g, '')
+        .replace(/\\r/g, '')
+        .replace(/\\t/g, '')
+        .replace(/\\/g, '');
+
+    // 匹配episodeList数组
+    const episodeListRegex = /episodeList":(\[[^\]]*\])/s;
+    const episodeListMatch = decodedHtml.match(episodeListRegex);
+
+    if (episodeListMatch) {
+        console.log("✅ 找到episodeList数据");
+
+        try {
+            // 方法1：直接解析JSON
+            const episodeListStr = episodeListMatch[1];
+            console.log("提取到的JSON字符串:", episodeListStr.substring(0, 100) + "...");
+
+            const episodeData = JSON.parse(episodeListStr);
+            console.log(`✅ 成功解析 ${episodeData.length} 个剧集项`);
+
+            episodeData.forEach(item => {
+                const href = `https://www.hnytxj.com/vod/play/${cid}/sid/${item.nid}`;
+
+                episodes.push({
+                    href: href.trim(),
+                    number: parseInt(item.name, 10)
+                });
+            });
+
+        } catch (parseError) {
+            console.log("❌ JSON解析失败，尝试备用方法:", parseError.message);
+
+            // 方法2：在提取到的episodeList字符串上执行正则匹配
+            const episodeListStr = episodeListMatch[1];
+            const itemRegex = /"nid":([^,]+),"name":"([^"]+)"/g;
+            let match;
+
+            while ((match = itemRegex.exec(episodeListStr)) !== null) {
+                const nid = match[1];
+                const name = match[2];
+                const href = `https://www.hnytxj.com/vod/play/${cid}/sid/${nid}`;
+
+                episodes.push({
+                    href: href.trim(),
+                    number: parseInt(name, 10)
+                });
+            }
+
+            console.log(`备用方法提取到 ${episodes.length} 个剧集`);
+        }
+    } else {
+        console.log("❌ 未找到episodeList数据，尝试备用匹配方法");
+
+        // 备用方法：直接匹配JSON结构中的episodeList
+        const jsonRegex = /"episodeList":(\[.*?\])/s;
+        const jsonMatch = decodedHtml.match(jsonRegex);
+
+        if (jsonMatch) {
+            try {
+                const episodeListStr = jsonMatch[1];
+                const episodeData = JSON.parse(episodeListStr);
+
+                episodeData.forEach(item => {
+                    const href = `https://www.hnytxj.com/vod/play/${cid}/sid/${item.nid}`;
+
+                    episodes.push({
+                        href: href.trim(),
+                        number: parseInt(item.name, 10)
+                    });
+                });
+            } catch (e) {
+                console.error("❌ 解析episodeList失败:", e);
+            }
+        }
+    }
+
+    console.log(`✅ 成功提取 ${episodes.length} 个剧集`);
+
+    return JSON.stringify(episodes);
 }
 
 async function extractStreamUrl(url) {
+    // const crypto = require('crypto');
+    // sora 不支持调用crypto模块，该用本地函数实现md5和sha1功能
 
-	return JSON.stringify([]);
+    try {
+        console.log(`开始获取stream URL: ${JSON.stringify(url)}`);
+        // 解析URL获取pid和nid
+        const parts = url.split('/');
+        const pid = parts[5];
+        const nid = parts[7];
 
+        // const t = new Date().getTime();
+        const t = Date.now();
+
+
+        const signkey = 'clientType=1&id=' + pid + '&nid=' + nid + '&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
+        const md5Hash = md5(signkey);  // 替换 crypto.createHash('md5').update(signkey).digest('hex')
+        const sign = sha1(md5Hash);    // 替换 crypto.createHash('sha1').update(md5Hash).digest('hex')
+
+        // console.log('MD5 Hash:', JSON.stringify({ md5Hash }));
+        // console.log('SHA1 Sign:', JSON.stringify({ sign }));
+
+
+        const headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36',
+            'deviceid': '63ffad23-a598-4f96-85d7-7bf5f3e4a0a2',
+            'sign': sign,
+            't': t.toString()
+        };
+
+        const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
+        const response = await fetchv2(apiUrl, headers);
+        const json_data = await response.json();
+
+        // 检查响应,可以临时启用：
+        // throw new Error(`API响应详情: ${JSON.stringify({
+        //     status: '成功',
+        //     code: json_data.code,
+        // 	url: url,
+        //     apiUrl: apiUrl,
+        // 	t: t,
+        // 	md5Hash: md5Hash,
+        // 	signkey:signkey,
+        // 	sign: sign,
+        //     fullData: json_data, // 完整数据，但可能很长
+        // 	json_data_list: json_data.data ? json_data.data.list : 'N/A',
+        // 	json_data_length: json_data.data ? json_data.data.list.length : 0
+        // }, null, 2)}`);
+
+        // 检查数据有效性并按照规范输出
+        if (json_data && json_data.data && json_data.data.list && json_data.data.list.length > 0) {
+            const streams = json_data.data.list.map(item => ({
+                title: item.resolutionName || 'Unknown Resolution',
+                streamUrl: item.url,
+                headers: {}
+            }));
+
+            // 按照文档规范输出
+            const result = {
+                streams: streams,
+            };
+
+            return JSON.stringify(result);
+
+
+        } else {
+            throw new Error('Invalid API response or no stream URL found');
+        }
+
+
+    } catch (error) {
+        throw new Error('Failed to extract stream URL: ' + error.message);
+    }
 }
