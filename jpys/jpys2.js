@@ -326,7 +326,7 @@ async function searchResults(keyword) {
             data = await response.text();
         }
 		console.log(`返回内容： ${data}， --- :${JSON.stringify(data)}`);
-		throw new error(`返回内容：${data} `)；
+		throw new error(`返回内容：${data} `);
 		
         const pageRegex = /"result":.*"totalPage":(\d+)/
         const match = data.match(pageRegex);
