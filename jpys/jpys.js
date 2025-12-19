@@ -381,7 +381,7 @@ async function searchResults(keyword) {
             'DNT': '1'
         };
         
-        const searchUrl = `https://hnytxj.com/vod/search/${encodeURIComponent(keyword)}?_rsc=xsbs6`;
+        const searchUrl = `https://m.ghw9zwp5.com/vod/search/${encodeURIComponent(keyword)}?_rsc=xsbs6`;
 //     console(`🌐 搜索URL: ${searchUrl}`);
         
         const response = await fetchv2(searchUrl, header);
@@ -414,7 +414,7 @@ async function searchResults(keyword) {
             const pageNum = currentPage.toString();
             const t = Date.now();
             const signKey = 'keyword=' + keyword + '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&type=false&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
-            const searchUrl = "https://www.hnytxj.com/api/mw-movie/anonymous/video/searchByWord?keyword=" + encodedKeyword + "&pageNum=" + pageNum + "&pageSize=" + pageSize + "&type=false";
+            const searchUrl = "https://m.ghw9zwp5.com/api/mw-movie/anonymous/video/searchByWord?keyword=" + encodedKeyword + "&pageNum=" + pageNum + "&pageSize=" + pageSize + "&type=false";
             const sign = sha1(md5(signKey));
             
 //     console(`🔑 第 ${currentPage} 页签名信息:`);
@@ -725,7 +725,7 @@ async function extractStreamUrl(url) {
             't': t.toString()
         };
 
-        const apiUrl = 'https://www.hnytxj.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
+        const apiUrl = 'https://m.ghw9zwp5.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
 //     console(`🌐 API请求URL: ${apiUrl}`);
         
         const response = await fetchv2(apiUrl, headers);
