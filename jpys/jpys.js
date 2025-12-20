@@ -361,6 +361,9 @@ function utf8Encode(string) {
 // 核心功能模块
 // ==========================================
 
+// ==== 基础域名
+const baseDomain = `m.ghw9zwp5.com` 
+
 /**
  * 搜索影片结果
  * @param {string} keyword - 搜索关键词
@@ -381,7 +384,7 @@ async function searchResults(keyword) {
             'DNT': '1'
         };
         
-        const searchUrl = `https://m.ghw9zwp5.com/vod/search/${encodeURIComponent(keyword)}?_rsc=xsbs6`;
+        const searchUrl = `https://${baseDomain}/vod/search/${encodeURIComponent(keyword)}?_rsc=xsbs6`;
 //     console(`🌐 搜索URL: ${searchUrl}`);
         
         const response = await fetchv2(searchUrl, header);
@@ -414,7 +417,7 @@ async function searchResults(keyword) {
             const pageNum = currentPage.toString();
             const t = Date.now();
             const signKey = 'keyword=' + keyword + '&pageNum=' + pageNum + '&pageSize=' + pageSize + '&type=false&key=cb808529bae6b6be45ecfab29a4889bc&t=' + t;
-            const searchUrl = "https://m.ghw9zwp5.com/api/mw-movie/anonymous/video/searchByWord?keyword=" + encodedKeyword + "&pageNum=" + pageNum + "&pageSize=" + pageSize + "&type=false";
+            const searchUrl = `https://${baseDomain}/api/mw-movie/anonymous/video/searchByWord?keyword=` + encodedKeyword + "&pageNum=" + pageNum + "&pageSize=" + pageSize + "&type=false";
             const sign = sha1(md5(signKey));
             
 //     console(`🔑 第 ${currentPage} 页签名信息:`);
@@ -425,7 +428,7 @@ async function searchResults(keyword) {
             try {
 //     console(`🔍 正在获取第 ${currentPage} 页数据...`);
                 const headers = {
-                    'Referer': 'https://m.ghw9zwp5.com/',
+                    'Referer': `https://${baseDomain}/`,
                     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
                     'sign': sign,
                     't': t
@@ -441,7 +444,7 @@ async function searchResults(keyword) {
 //     console(`🎬 第 ${currentPage} 页找到 ${movieList.length} 部影片`);
                     
                     movieList.forEach((movie, index) => {
-                        const href = `https://www.m.ghw9zwp5.com/detail/${movie.vodId}`;
+                        const href = `https://${baseDomain}/detail/${movie.vodId}`;
                         const image = movie.vodPic;
                         const title = movie.vodName;
 
@@ -603,7 +606,7 @@ async function extractEpisodes(url) {
 //     console(`🎬 成功解析 ${episodeData.length} 个剧集`);
 
                 episodeData.forEach((item, index) => {
-                    const href = `https://www.m.ghw9zwp5.com/vod/play/${cid}/sid/${item.nid}`;
+                    const href = `https://${baseDomain}/vod/play/${cid}/sid/${item.nid}`;
                     episodes.push({
                         href: href.trim(),
                         number: parseInt(item.name, 10)
@@ -631,7 +634,7 @@ async function extractEpisodes(url) {
                 while ((match = itemRegex.exec(episodeListStr)) !== null) {
                     const nid = match[1];
                     const name = match[2];
-                    const href = `https://www.m.ghw9zwp5.com/vod/play/${cid}/sid/${nid}`;
+                    const href = `https://${baseDomain}/vod/play/${cid}/sid/${nid}`;
                     episodes.push({
                         href: href.trim(),
                         number: parseInt(name, 10)
@@ -654,7 +657,7 @@ async function extractEpisodes(url) {
                     const episodeData = JSON.parse(episodeListStr);
 
                     episodeData.forEach(item => {
-                        const href = `https://www.m.ghw9zwp5.com/vod/play/${cid}/sid/${item.nid}`;
+                        const href = `https://${baseDomain}/vod/play/${cid}/sid/${item.nid}`;
                         episodes.push({
                             href: href.trim(),
                             number: parseInt(item.name, 10)
@@ -725,7 +728,7 @@ async function extractStreamUrl(url) {
             't': t.toString()
         };
 
-        const apiUrl = 'https://m.ghw9zwp5.com/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=' + pid + '&nid=' + nid;
+        const apiUrl = `https://${baseDomain}/api/mw-movie/anonymous/v2/video/episode/url?clientType=1&id=` + pid + '&nid=' + nid;
 //     console(`🌐 API请求URL: ${apiUrl}`);
         
         const response = await fetchv2(apiUrl, headers);
