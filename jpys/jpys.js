@@ -425,7 +425,7 @@ async function searchResults(keyword) {
             try {
 //     console(`🔍 正在获取第 ${currentPage} 页数据...`);
                 const headers = {
-                    'Referer': 'https://hnytxj.com/',
+                    'Referer': 'https://m.ghw9zwp5.com/',
                     'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
                     'sign': sign,
                     't': t
@@ -441,7 +441,7 @@ async function searchResults(keyword) {
 //     console(`🎬 第 ${currentPage} 页找到 ${movieList.length} 部影片`);
                     
                     movieList.forEach((movie, index) => {
-                        const href = `https://www.hnytxj.com/detail/${movie.vodId}`;
+                        const href = `https://www.m.ghw9zwp5.com/detail/${movie.vodId}`;
                         const image = movie.vodPic;
                         const title = movie.vodName;
 
@@ -603,7 +603,7 @@ async function extractEpisodes(url) {
 //     console(`🎬 成功解析 ${episodeData.length} 个剧集`);
 
                 episodeData.forEach((item, index) => {
-                    const href = `https://www.hnytxj.com/vod/play/${cid}/sid/${item.nid}`;
+                    const href = `https://www.m.ghw9zwp5.com/vod/play/${cid}/sid/${item.nid}`;
                     episodes.push({
                         href: href.trim(),
                         number: parseInt(item.name, 10)
@@ -631,7 +631,7 @@ async function extractEpisodes(url) {
                 while ((match = itemRegex.exec(episodeListStr)) !== null) {
                     const nid = match[1];
                     const name = match[2];
-                    const href = `https://www.hnytxj.com/vod/play/${cid}/sid/${nid}`;
+                    const href = `https://www.m.ghw9zwp5.com/vod/play/${cid}/sid/${nid}`;
                     episodes.push({
                         href: href.trim(),
                         number: parseInt(name, 10)
@@ -654,7 +654,7 @@ async function extractEpisodes(url) {
                     const episodeData = JSON.parse(episodeListStr);
 
                     episodeData.forEach(item => {
-                        const href = `https://www.hnytxj.com/vod/play/${cid}/sid/${item.nid}`;
+                        const href = `https://www.m.ghw9zwp5.com/vod/play/${cid}/sid/${item.nid}`;
                         episodes.push({
                             href: href.trim(),
                             number: parseInt(item.name, 10)
