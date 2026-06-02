@@ -10,7 +10,7 @@
     "streamType": "HLS",
     "quality": "1080p",
     "baseUrl": "https://m.hnytxj.com/",
-    "searchBaseUrl": "https://m.hnytxj.com//vod/search/%s",
+    "searchBaseUrl": "https://m.hnytxj.com/vod/search/%s",
     "scriptUrl": "https://raw.githubusercontent.com/fqw000/soraSource/refs/heads/main/jpys/jpys.js",
     "asyncJS": true,
     "softsub": true,
