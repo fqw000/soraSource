@@ -362,8 +362,9 @@ function utf8Encode(string) {
 // ==========================================
 
 // ==== 基础域名
-const baseDomain = `m.ghw9zwp5.com` 
-
+const baseDomain = `m.hnytxj.com` 
+// https://m.hnytxj.com/
+// m.ghw9zwp5.com
 /**
  * 搜索影片结果
  * @param {string} keyword - 搜索关键词
