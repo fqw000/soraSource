@@ -1,0 +1,265 @@
+{
+  "vod": [
+    {
+      "name": "Cai_cmsUser",
+      "version": 1,
+      "remark": "自建CMS采集接口",
+      "webSite": "",
+      "order": "Z01",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Cai_cmsUser.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_Zhi_gzys",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z02",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_Zhi_gzys.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_aomi",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z03",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_aomi.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_baijia",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z04",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_baijia.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_changZhang20240614",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z05",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_changZhang20240614.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_clicli",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z06",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_clicli.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_dandanju",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z07",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_dandanju.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_dawanou",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z08",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_dawanou.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_duanjutt",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z09",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_duanjutt.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_jcy",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z10",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_jcy.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_jocy",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z11",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_jocy.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_jpyy",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z12",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_jpyy.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_laobai",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z13",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_laobai.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_liuqu",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z14",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_liuqu.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_mifun",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z15",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_mifun.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_mubai",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z16",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_mubai.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_qingying",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z17",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_qingying.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_resyunpan",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z18",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_resyunpan.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_revohd",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z19",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_revohd.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_saohuo",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z20",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_saohuo.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_subaibai",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z21",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_subaibai.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_tiantian",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z22",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_tiantian.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_xiafan",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z23",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_xiafan.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_xiaomi",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z24",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_xiaomi.js",
+      "type": 101
+    },
+    {
+      "name": "Deprecated_xpgtv",
+      "version": 1,
+      "remark": "已废弃",
+      "webSite": "",
+      "order": "Z25",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Deprecated_xpgtv.js",
+      "type": 101
+    },
+    {
+      "name": "Jie_cms",
+      "version": 1,
+      "remark": "金蝉采集解析",
+      "webSite": "",
+      "order": "Z26",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Jie_cms.js",
+      "type": 101
+    },
+    {
+      "name": "Jie_cms2",
+      "version": 1,
+      "remark": "金蝉采集解析2",
+      "webSite": "",
+      "order": "Z27",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Jie_cms2.js",
+      "type": 101
+    },
+    {
+      "name": "Jin_91jav",
+      "version": 1,
+      "remark": "",
+      "webSite": "",
+      "order": "Z28",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Jin_91jav.js",
+      "type": 101
+    },
+    {
+      "name": "Jin_hkdoll",
+      "version": 1,
+      "remark": "",
+      "webSite": "",
+      "order": "Z29",
+      "api": "https://raw.githubusercontent.com/YYDS678/uzVideo-extensions/refs/heads/main/vod/js/Jin_hkdoll.js",
+      "type": 101
+    }
+  ]
+}
