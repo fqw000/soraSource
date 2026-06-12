@@ -362,7 +362,7 @@ function utf8Encode(string) {
 // ==========================================
 
 // ==== 基础域名
-const baseDomain = `m.hnytxj.com` 
+const baseDomain = `m.0996zp.com` 
 // https://m.hnytxj.com/
 // m.ghw9zwp5.com
 /**
